@@ -1,21 +1,16 @@
-import { useState, useEffect, forwardRef } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, forwardRef, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const words = ["operators.", "sponsors.", "developers.", "investors."];
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.3 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] } },
-};
 
 const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
   const [wordIndex, setWordIndex] = useState(0);
   const [visible, setVisible] = useState(true);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,29 +23,65 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Entrance stagger animation
+      const children = contentRef.current?.children;
+      if (children) {
+        gsap.fromTo(
+          Array.from(children),
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.3 }
+        );
+      }
+
+      // Pin hero
+      const sectionEl = typeof ref === "function" ? null : ref?.current;
+      if (sectionEl) {
+        ScrollTrigger.create({
+          trigger: sectionEl,
+          start: "top top",
+          end: "40% top",
+          pin: true,
+          pinSpacing: true,
+        });
+      }
+
+      // Scrub headline
+      if (headlineRef.current && sectionEl) {
+        gsap.to(headlineRef.current, {
+          y: -30,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionEl,
+            start: "top top",
+            end: "40% top",
+            scrub: true,
+          },
+        });
+      }
+    });
+
+    return () => ctx.revert();
+  }, [ref]);
+
   const scrollTo = (id: string) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <section ref={ref} className="relative h-screen flex items-center justify-center noise-overlay" style={{ background: "#080808" }}>
-      {/* EST */}
       <div className="absolute top-24 left-6 md:left-12 font-body font-light text-[11px] tracking-[0.2em] text-jwr-dim">
         EST. 2000
       </div>
 
-      <motion.div
-        className="text-center px-6 max-w-4xl"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.p variants={itemVariants} className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-8">
+      <div ref={contentRef} className="text-center px-6 max-w-4xl">
+        <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-8">
           PRIVATE CAPITAL ADVISORY
-        </motion.p>
+        </p>
 
-        <motion.h1
-          variants={itemVariants}
+        <h1
+          ref={headlineRef}
           className="font-display font-light text-jwr-text leading-[1.05]"
           style={{ fontSize: "clamp(52px, 7vw, 96px)" }}
         >
@@ -58,7 +89,7 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
           <br />
           serious{" "}
           <span
-            className="text-gold inline-block transition-all duration-400"
+            className="text-gold inline-block"
             style={{
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(-10px)",
@@ -67,13 +98,13 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
           >
             {words[wordIndex]}
           </span>
-        </motion.h1>
+        </h1>
 
-        <motion.p variants={itemVariants} className="font-body font-light text-base text-jwr-muted max-w-[480px] mx-auto mt-8 leading-[1.7]">
+        <p className="font-body font-light text-base text-jwr-muted max-w-[480px] mx-auto mt-8 leading-[1.7]">
           Arranging debt and equity up to $10B+ across real estate, construction, and business capital since 1999.
-        </motion.p>
+        </p>
 
-        <motion.div variants={itemVariants} className="flex items-center justify-center gap-4 mt-10">
+        <div className="flex items-center justify-center gap-4 mt-10">
           <button
             onClick={() => scrollTo("#contact")}
             className="font-display font-normal text-[15px] tracking-[0.12em] bg-gold text-jwr-bg px-8 py-3.5 hover:bg-gold-light transition-colors duration-300"
@@ -86,10 +117,9 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
           >
             Explore Services
           </button>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
-      {/* Bottom line + scroll indicator */}
       <div className="absolute bottom-0 left-0 right-0">
         <div className="w-full h-px" style={{ background: "rgba(201,168,76,0.15)" }} />
         <div className="flex flex-col items-center py-6">

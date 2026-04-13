@@ -1,5 +1,8 @@
-import { forwardRef, useState } from "react";
-import { motion } from "framer-motion";
+import { forwardRef, useState, useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const financingTypes = [
   "Ground Up Construction", "Commercial Real Estate", "Commercial Bridge Loans",
@@ -9,16 +12,6 @@ const financingTypes = [
   "Working Capital", "Equipment Financing",
 ];
 
-const sectionVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] } },
-};
-
 const inputClass =
   "w-full bg-transparent font-body font-light text-jwr-text py-4 border-b border-gold/20 focus:border-gold outline-none transition-colors duration-300 placeholder:text-jwr-dim text-[14px]";
 
@@ -26,6 +19,28 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
   const [form, setForm] = useState({
     name: "", company: "", phone: "", email: "", type: "", amount: "", description: "",
   });
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (!contentRef.current) return;
+      const children = contentRef.current.children;
+      gsap.fromTo(
+        Array.from(children),
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
+          stagger: 0.15,
+          scrollTrigger: {
+            trigger: contentRef.current,
+            start: "top 75%",
+            once: true,
+          },
+        }
+      );
+    });
+    return () => ctx.revert();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -33,15 +48,8 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <section ref={ref} id="contact" className="py-[160px] px-6 md:px-20 noise-overlay" style={{ background: "#080808" }}>
-      <motion.div
-        className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={sectionVariants}
-      >
-        {/* Left */}
-        <motion.div variants={itemVariants}>
+      <div ref={contentRef} className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20">
+        <div style={{ opacity: 0 }}>
           <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">GET STARTED</p>
           <h2 className="font-display font-light text-[48px] text-jwr-text leading-[1.1]">Tell us about your deal.</h2>
           <p className="font-body font-light text-[15px] text-jwr-muted mt-6 leading-[1.7]">
@@ -49,10 +57,9 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
           </p>
           <p className="font-display font-normal text-[20px] text-gold mt-10">(267) 969-0520</p>
           <p className="font-body font-light text-[14px] text-jwr-muted mt-2">jwinick31@gmail.com</p>
-        </motion.div>
+        </div>
 
-        {/* Right - Form */}
-        <motion.form variants={itemVariants} className="flex flex-col gap-2" onSubmit={(e) => e.preventDefault()}>
+        <form className="flex flex-col gap-2" onSubmit={(e) => e.preventDefault()} style={{ opacity: 0 }}>
           <input name="name" placeholder="Full Name" className={inputClass} value={form.name} onChange={handleChange} />
           <input name="company" placeholder="Company Name" className={inputClass} value={form.company} onChange={handleChange} />
           <input name="phone" placeholder="Phone Number" className={inputClass} value={form.phone} onChange={handleChange} />
@@ -84,8 +91,8 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
           >
             Submit
           </button>
-        </motion.form>
-      </motion.div>
+        </form>
+      </div>
     </section>
   );
 });
