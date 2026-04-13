@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 const links = [
   { label: "Services", href: "#services" },
@@ -31,7 +30,6 @@ const Navbar = () => {
           JWR FUNDING
         </a>
 
-        {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <button
@@ -50,7 +48,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile hamburger */}
         <button className="md:hidden flex flex-col gap-[6px]" onClick={() => setOpen(!open)}>
           {[0, 1, 2].map((i) => (
             <span key={i} className="block w-6 h-px bg-gold" />
@@ -58,34 +55,28 @@ const Navbar = () => {
         </button>
       </nav>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8"
-            style={{ background: "rgba(8,8,8,0.97)" }}
-          >
-            {links.map((l) => (
-              <button
-                key={l.href}
-                onClick={() => scrollTo(l.href)}
-                className="font-display font-light text-2xl text-jwr-text tracking-[0.15em]"
-              >
-                {l.label}
-              </button>
-            ))}
+      {open && (
+        <div
+          className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 transition-opacity"
+          style={{ background: "rgba(8,8,8,0.97)" }}
+        >
+          {links.map((l) => (
             <button
-              onClick={() => scrollTo("#contact")}
-              className="font-display font-normal text-lg text-gold border border-gold px-8 py-3 mt-4"
+              key={l.href}
+              onClick={() => scrollTo(l.href)}
+              className="font-display font-light text-2xl text-jwr-text tracking-[0.15em]"
             >
-              Apply for Financing
+              {l.label}
             </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          ))}
+          <button
+            onClick={() => scrollTo("#contact")}
+            className="font-display font-normal text-lg text-gold border border-gold px-8 py-3 mt-4"
+          >
+            Apply for Financing
+          </button>
+        </div>
+      )}
     </>
   );
 };
