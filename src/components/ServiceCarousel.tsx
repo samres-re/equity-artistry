@@ -17,12 +17,12 @@ const services = [
   { name: "Debt Restructuring", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=400&q=70" },
 ];
 
-const CARD_W = 300;
-const CARD_H = 380;
-const CARD_GAP = 40;
-const MAX_ROTATE_Y = 35;
-const TRANSLATE_Z_FALLOFF = -100;
-const VISIBLE_CARDS = 5;
+const CARD_W = 260;
+const CARD_H = 340;
+const CARD_GAP = 30;
+const MAX_ROTATE_Y = 40;
+const TRANSLATE_Z_FALLOFF = -120;
+const VISIBLE_CARDS = 7;
 
 const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
   const headerRef = useRef<HTMLDivElement>(null);
