@@ -54,7 +54,7 @@ const Index = () => {
       <MetricsSection ref={metricsRef} />
       <Suspense fallback={null}>
         <ServiceCarousel ref={carouselRef} />
-        <ServiceSections sectionRefs={sectionRefs} />
+        <ServiceSections sectionRefs={serviceSectionRefs} />
         <WhyJWRSection ref={whyRef} />
         <AboutSection ref={aboutRef} />
         <ContactSection ref={contactRef} />
