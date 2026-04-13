@@ -168,6 +168,28 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
           className="relative flex items-center justify-center"
           style={{ perspective: "1200px", height: CARD_H + 60 }}
         >
+          {/* Decorative gold arc behind cards */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div
+              className="w-[90%] max-w-[1100px]"
+              style={{
+                height: "1px",
+                background: "linear-gradient(to right, transparent 0%, rgba(201,168,76,0.15) 20%, rgba(201,168,76,0.25) 50%, rgba(201,168,76,0.15) 80%, transparent 100%)",
+                marginTop: "-20px",
+              }}
+            />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div
+              style={{
+                width: "70%",
+                maxWidth: "900px",
+                height: CARD_H - 40,
+                border: "1px solid rgba(201,168,76,0.06)",
+                borderRadius: "50%",
+              }}
+            />
+          </div>
           <div
             ref={arcRef}
             className="relative"
