@@ -176,9 +176,9 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
             {services.map((s, i) => {
               // Initial positions: all cards start spread from center (card 0 centered)
               const offset = i;
-              const clampedOffset = Math.max(-3, Math.min(3, offset));
-              const rotateY = (clampedOffset / 3) * MAX_ROTATE_Y;
-              const translateZ = TRANSLATE_Z_FALLOFF * Math.abs(clampedOffset / 3);
+              const clampedOffset = Math.max(-4, Math.min(4, offset));
+              const rotateY = (clampedOffset / 4) * MAX_ROTATE_Y;
+              const translateZ = TRANSLATE_Z_FALLOFF * Math.abs(clampedOffset / 4);
               const translateX = offset * (CARD_W + CARD_GAP);
 
               return (
