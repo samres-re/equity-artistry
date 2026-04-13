@@ -132,6 +132,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
         const gradient = isOdd
           ? "linear-gradient(to right, rgba(18,18,18,0.97) 45%, rgba(18,18,18,0.4) 100%)"
           : "linear-gradient(to left, rgba(18,18,18,0.97) 45%, rgba(18,18,18,0.4) 100%)";
+        const mobileGradient = "linear-gradient(to top, rgba(18,18,18,0.95) 60%, rgba(18,18,18,0.5) 100%)";
 
         // Split headline into words for OVA-style animation
         const headlineWords = s.name.split(/\s+/);
@@ -151,10 +152,11 @@ const ServiceSections = ({ sectionRefs }: Props) => {
                 top: "-120px", bottom: "-120px", left: 0, right: 0,
               }}
             />
-            <div className="absolute inset-0" style={{ background: gradient }} />
+            <div className="absolute inset-0 hidden md:block" style={{ background: gradient }} />
+            <div className="absolute inset-0 md:hidden" style={{ background: mobileGradient }} />
 
-            <div className={`relative z-10 w-full flex ${isOdd ? "justify-start" : "justify-end"}`}>
-              <div className="px-8 md:px-20 py-20 max-w-[560px]">
+            <div className={`relative z-10 w-full flex justify-start md:${isOdd ? "justify-start" : "justify-end"}`}>
+              <div className="px-6 md:px-20 py-20 max-w-[560px]">
                 {/* Vertical gold line — OVA signature section marker */}
                 <div
                   ref={(el) => { lineRefs.current[i] = el; }}
@@ -172,7 +174,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
 
                 <h2
                   ref={(el) => { headlineRefs.current[i] = el; }}
-                  className="font-display font-light text-[72px] text-jwr-text leading-[1.1] mt-4"
+                  className="font-display font-light text-[40px] md:text-[72px] text-jwr-text leading-[1.1] mt-4"
                   style={{ perspective: "1000px" }}
                 >
                   {headlineWords.map((word, wi) => (

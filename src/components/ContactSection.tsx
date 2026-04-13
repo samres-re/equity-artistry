@@ -58,11 +58,11 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
   };
 
   return (
-    <section ref={ref} id="contact" className="py-[160px] px-6 md:px-20 noise-overlay" style={{ background: "#121212" }}>
+    <section ref={ref} id="contact" className="py-[80px] md:py-[160px] px-6 md:px-20 noise-overlay" style={{ background: "#121212" }}>
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20">
         <div ref={leftRef} style={{ opacity: 0 }}>
           <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">GET STARTED</p>
-          <SplitText as="h2" className="font-display font-light text-[80px] text-jwr-text leading-[1.1]" scrub={false} triggerStart="top 80%">
+          <SplitText as="h2" className="font-display font-light text-[42px] md:text-[80px] text-jwr-text leading-[1.1]" scrub={false} triggerStart="top 80%">
             Tell us about your deal.
           </SplitText>
           <p className="font-body font-light text-[15px] text-jwr-muted mt-6 leading-[1.7]">

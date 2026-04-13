@@ -28,7 +28,7 @@ function CountUp({ target, prefix, suffix, triggered }: { target: number; prefix
   }, [triggered, target]);
 
   return (
-    <span className="font-display font-light text-[56px] text-gold tracking-[-0.02em]">
+    <span className="font-display font-light text-[32px] md:text-[56px] text-gold tracking-[-0.02em]">
       {prefix}{count}{suffix}
     </span>
   );
@@ -72,7 +72,7 @@ const MetricsSection = forwardRef<HTMLDivElement>((_, ref) => {
         if (typeof ref === "function") ref(el);
         else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
       }}
-      className="h-[180px] flex items-center"
+      className="h-auto min-h-[120px] md:h-[180px] flex items-center py-6 md:py-0"
       style={{
         background: "#141414",
         borderTop: "1px solid rgba(201,168,76,0.1)",
@@ -88,7 +88,7 @@ const MetricsSection = forwardRef<HTMLDivElement>((_, ref) => {
             style={{ borderRight: i < 2 ? "1px solid rgba(201,168,76,0.1)" : "none", opacity: 0 }}
           >
             <CountUp target={m.value} prefix={m.prefix} suffix={m.suffix} triggered={triggered} />
-            <span className="font-body font-light text-[11px] tracking-[0.25em] text-jwr-muted mt-2">{m.label}</span>
+            <span className="font-body font-light text-[9px] md:text-[11px] tracking-[0.25em] text-jwr-muted mt-1 md:mt-2">{m.label}</span>
           </div>
         ))}
       </div>

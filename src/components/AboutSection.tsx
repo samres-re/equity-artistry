@@ -66,7 +66,7 @@ const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
 
         <SplitText
           as="h2"
-          className="font-display font-light text-[84px] text-jwr-text leading-[1.1]"
+          className="font-display font-light text-[42px] md:text-[84px] text-jwr-text leading-[1.1]"
           scrub={1.5}
           triggerStart="top 75%"
           triggerEnd="top 35%"
