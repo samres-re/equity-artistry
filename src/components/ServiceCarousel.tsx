@@ -209,7 +209,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
                     className="absolute inset-0"
                     style={{ background: "linear-gradient(to top, rgba(8,8,8,0.95) 35%, rgba(8,8,8,0.15) 100%)" }}
                   />
-                  <div className="absolute inset-0 border border-transparent group-hover:border-gold/40 transition-colors duration-300" style={{ borderRadius: 4 }} />
+                  <div className="card-border-overlay absolute inset-0 border border-transparent transition-colors duration-500" style={{ borderRadius: 4 }} />
                   <div className="absolute bottom-5 left-5 right-5">
                     <p className="font-body font-light text-[10px] tracking-[0.2em] text-gold mb-1">{s.tag}</p>
                     <h3 className="font-display font-normal text-[20px] text-jwr-text leading-tight">{s.name}</h3>
