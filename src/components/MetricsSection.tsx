@@ -55,7 +55,7 @@ const MetricsSection = forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <section
-      ref={(el) => {
+      ref={(el: HTMLDivElement | null) => {
         sectionRef.current = el;
         if (typeof ref === "function") ref(el);
         else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
