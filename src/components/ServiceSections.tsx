@@ -211,6 +211,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
                   ref={(el) => { ctaRefs.current[i] = el; }}
                   className="mt-8 font-body font-light text-[13px] tracking-[0.15em] text-gold hover:tracking-[0.25em] transition-all duration-300"
                   style={{ opacity: 0 }}
+                  onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
                 >
                   Learn More →
                 </button>
