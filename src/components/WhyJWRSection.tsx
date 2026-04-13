@@ -13,7 +13,7 @@ const differentiators = [
 ];
 
 const WhyJWRSection = forwardRef<HTMLDivElement>((_, ref) => {
-  const quoteRef = useRef<HTMLDivElement>(null);
+  const quoteRef = useRef<HTMLQuoteElement>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
   const attrRef = useRef<HTMLParagraphElement>(null);
 
