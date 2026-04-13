@@ -114,7 +114,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
   // Mobile fallback: standard horizontal scroll
   if (isMobile) {
     return (
-      <section ref={ref} id="services" className="py-[100px] noise-overlay" style={{ background: "#080808" }}>
+      <section ref={ref} id="services" className="py-[100px] noise-overlay" style={{ background: "#121212" }}>
         <div className="px-6 mb-10">
           <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">FINANCING SOLUTIONS</p>
           <SplitText as="h2" className="font-display font-light text-[36px] text-jwr-text" scrub={false} triggerStart="top 85%">
@@ -133,7 +133,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${s.img})` }}
               />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,8,8,0.95) 35%, rgba(8,8,8,0.15) 100%)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(18,18,18,0.95) 35%, rgba(18,18,18,0.15) 100%)" }} />
               <div className="absolute bottom-5 left-5 right-5">
                 <p className="font-body font-light text-[10px] tracking-[0.2em] text-gold mb-1">{s.tag}</p>
                 <h3 className="font-display font-normal text-[20px] text-jwr-text leading-tight">{s.name}</h3>
@@ -154,7 +154,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
       }}
       id="services"
       className="noise-overlay relative"
-      style={{ background: "#080808", height: "250vh" }}
+      style={{ background: "#121212", height: "250vh" }}
     >
       <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
         <div ref={headerRef} className="px-6 md:px-12 mb-16" style={{ opacity: 0 }}>
@@ -207,7 +207,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
                   />
                   <div
                     className="absolute inset-0"
-                    style={{ background: "linear-gradient(to top, rgba(8,8,8,0.95) 35%, rgba(8,8,8,0.15) 100%)" }}
+                    style={{ background: "linear-gradient(to top, rgba(18,18,18,0.95) 35%, rgba(18,18,18,0.15) 100%)" }}
                   />
                   <div className="card-border-overlay absolute inset-0 border border-transparent transition-colors duration-500" style={{ borderRadius: 4 }} />
                   <div className="absolute bottom-5 left-5 right-5">

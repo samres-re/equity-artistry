@@ -93,7 +93,7 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
   };
 
   return (
-    <section ref={ref} className="relative h-screen flex items-center justify-center noise-overlay" style={{ background: "#080808" }}>
+    <section ref={ref} className="relative h-screen flex items-center justify-center noise-overlay" style={{ background: "#121212" }}>
       <div className="absolute top-24 left-6 md:left-12 font-body font-light text-[11px] tracking-[0.2em] text-jwr-dim">
         EST. 2000
       </div>

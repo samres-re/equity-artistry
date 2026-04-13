@@ -55,7 +55,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="noise-overlay" style={{ background: "#080808" }}>
+    <div className="noise-overlay" style={{ background: "#121212" }}>
       <Navbar />
       <HeroSection ref={heroRef} />
       <MetricsSection ref={metricsRef} />
