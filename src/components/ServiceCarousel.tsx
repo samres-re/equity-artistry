@@ -117,7 +117,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
       <section ref={ref} id="services" className="py-[100px] noise-overlay" style={{ background: "#121212" }}>
         <div className="px-6 mb-10">
           <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">FINANCING SOLUTIONS</p>
-          <SplitText as="h2" className="font-display font-light text-[36px] text-jwr-text" scrub={false} triggerStart="top 85%">
+          <SplitText as="h2" className="font-display font-light text-[44px] text-jwr-text" scrub={false} triggerStart="top 85%">
             Every capital need. One firm.
           </SplitText>
         </div>
@@ -159,7 +159,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
       <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
         <div ref={headerRef} className="px-6 md:px-12 mb-16" style={{ opacity: 0 }}>
           <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">FINANCING SOLUTIONS</p>
-          <SplitText as="h2" className="font-display font-light text-[48px] text-jwr-text" scrub={false} triggerStart="top 85%">
+          <SplitText as="h2" className="font-display font-light text-[64px] text-jwr-text" scrub={false} triggerStart="top 85%">
             Every capital need. One firm.
           </SplitText>
         </div>
