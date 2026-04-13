@@ -34,8 +34,8 @@ export default {
           "bg-secondary": "#181818",
           "bg-card": "#1a1a1a",
           text: "#F0EDE6",
-          muted: "#8C8C8C",
-          dim: "#525252",
+          muted: "#A6A6A6",
+          dim: "#666666",
         },
       },
       fontFamily: {
