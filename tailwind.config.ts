@@ -30,9 +30,9 @@ export default {
           dim: "#8B6914",
         },
         jwr: {
-          bg: "#080808",
-          "bg-secondary": "#0f0f0f",
-          "bg-card": "#111111",
+          bg: "#121212",
+          "bg-secondary": "#181818",
+          "bg-card": "#1a1a1a",
           text: "#F0EDE6",
           muted: "#6B6B6B",
           dim: "#3A3A3A",
