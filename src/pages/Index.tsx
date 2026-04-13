@@ -1,16 +1,18 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, lazy, Suspense } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import MetricsSection from "@/components/MetricsSection";
-import ServiceCarousel from "@/components/ServiceCarousel";
-import ServiceSections from "@/components/ServiceSections";
-import WhyJWRSection from "@/components/WhyJWRSection";
-import AboutSection from "@/components/AboutSection";
-import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
+
+// Lazy-load below-fold sections
+const ServiceCarousel = lazy(() => import("@/components/ServiceCarousel"));
+const ServiceSections = lazy(() => import("@/components/ServiceSections"));
+const WhyJWRSection = lazy(() => import("@/components/WhyJWRSection"));
+const AboutSection = lazy(() => import("@/components/AboutSection"));
+const ContactSection = lazy(() => import("@/components/ContactSection"));
+const Footer = lazy(() => import("@/components/Footer"));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -59,12 +61,14 @@ const Index = () => {
       <Navbar />
       <HeroSection ref={heroRef} />
       <MetricsSection ref={metricsRef} />
-      <ServiceCarousel ref={carouselRef} />
-      <ServiceSections sectionRefs={sectionRefs} />
-      <WhyJWRSection ref={whyRef} />
-      <AboutSection ref={aboutRef} />
-      <ContactSection ref={contactRef} />
-      <Footer />
+      <Suspense fallback={null}>
+        <ServiceCarousel ref={carouselRef} />
+        <ServiceSections sectionRefs={sectionRefs} />
+        <WhyJWRSection ref={whyRef} />
+        <AboutSection ref={aboutRef} />
+        <ContactSection ref={contactRef} />
+        <Footer />
+      </Suspense>
     </div>
   );
 };

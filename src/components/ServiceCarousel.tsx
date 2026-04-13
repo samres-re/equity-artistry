@@ -7,14 +7,14 @@ import { useIsMobile } from "@/hooks/use-mobile";
 gsap.registerPlugin(ScrollTrigger);
 
 const services = [
-  { name: "Ground Up Construction", tag: "Real Estate", img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=640&q=80" },
-  { name: "Commercial Real Estate", tag: "Real Estate", img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=640&q=80" },
-  { name: "Commercial Bridge Loans", tag: "Real Estate", img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=640&q=80" },
-  { name: "Equity Investments", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?w=640&q=80" },
-  { name: "Business Acquisition", tag: "Business Capital", img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=640&q=80" },
-  { name: "Securities-Based Lending", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=640&q=80" },
-  { name: "Medical Working Capital", tag: "Business Capital", img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=640&q=80" },
-  { name: "Debt Restructuring", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=640&q=80" },
+  { name: "Ground Up Construction", tag: "Real Estate", img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=70" },
+  { name: "Commercial Real Estate", tag: "Real Estate", img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&q=70" },
+  { name: "Commercial Bridge Loans", tag: "Real Estate", img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&q=70" },
+  { name: "Equity Investments", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?w=400&q=70" },
+  { name: "Business Acquisition", tag: "Business Capital", img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&q=70" },
+  { name: "Securities-Based Lending", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&q=70" },
+  { name: "Medical Working Capital", tag: "Business Capital", img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&q=70" },
+  { name: "Debt Restructuring", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=400&q=70" },
 ];
 
 const CARD_W = 300;
