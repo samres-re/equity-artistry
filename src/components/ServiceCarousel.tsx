@@ -114,10 +114,10 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
   // Mobile fallback: standard horizontal scroll
   if (isMobile) {
     return (
-      <section ref={ref} id="services" className="py-[100px] noise-overlay" style={{ background: "#121212" }}>
-        <div className="px-6 mb-10">
+      <section ref={ref} id="services" className="py-[60px] noise-overlay" style={{ background: "#121212" }}>
+        <div className="px-6 mb-8">
           <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">FINANCING SOLUTIONS</p>
-          <SplitText as="h2" className="font-display font-light text-[52px] text-jwr-text" scrub={false} triggerStart="top 85%">
+          <SplitText as="h2" className="font-display font-light text-[36px] text-jwr-text" scrub={false} triggerStart="top 85%">
             Every capital need. One firm.
           </SplitText>
         </div>
