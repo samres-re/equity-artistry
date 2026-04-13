@@ -2,18 +2,19 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitText from "./SplitText";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const services = [
-  { name: "Ground Up Construction Leasing", desc: "Full-cycle financing for ground-up development projects. We structure debt and equity from site acquisition through vertical construction and certificate of occupancy.", img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=70" },
-  { name: "Commercial Real Estate Financing", desc: "Senior debt, bridge, and permanent financing across multifamily, industrial, office, and mixed-use assets. Competitive terms from $1M to $500M+.", img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=70" },
-  { name: "Commercial Bridge Loans", desc: "Short-term bridge capital for acquisitions, recapitalizations, and transitional assets. Fast closings, flexible structures, and certainty of execution.", img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&q=70" },
-  { name: "Equity Investments", desc: "Preferred equity and JV structures for sponsors who need capital above the senior debt but below common equity. We invest where conventional lenders won't.", img: "https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?w=800&q=70" },
-  { name: "Business Acquisition Financing", desc: "Structured capital solutions for acquisitions of operating businesses. We arrange senior debt, mezzanine, and equity co-investment for qualified buyers.", img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=70" },
-  { name: "Securities-Based Lending", desc: "Leverage your liquid portfolio without triggering a taxable event. We arrange non-purpose loans against publicly traded securities, private equity interests, and alternatives.", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=70" },
-  { name: "Medical Working Capital", desc: "Revenue-based working capital for medical practices, outpatient facilities, and healthcare operators. Fast approvals, minimal documentation.", img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=70" },
-  { name: "Debt Restructuring", desc: "Distressed debt advisory and recapitalization for borrowers facing maturity defaults, covenant breaches, or over-leveraged capital stacks. Discreet, experienced, results-driven.", img: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=800&q=70" },
+  { name: "Ground Up Construction Leasing", desc: "Full-cycle financing for ground-up development projects. We structure debt and equity from site acquisition through vertical construction and certificate of occupancy.", img: "https://images.unsplash.com/photo-1486325212027-8081e485255e" },
+  { name: "Commercial Real Estate Financing", desc: "Senior debt, bridge, and permanent financing across multifamily, industrial, office, and mixed-use assets. Competitive terms from $1M to $500M+.", img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa" },
+  { name: "Commercial Bridge Loans", desc: "Short-term bridge capital for acquisitions, recapitalizations, and transitional assets. Fast closings, flexible structures, and certainty of execution.", img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5" },
+  { name: "Equity Investments", desc: "Preferred equity and JV structures for sponsors who need capital above the senior debt but below common equity. We invest where conventional lenders won't.", img: "https://images.unsplash.com/photo-1444653614773-995cb1ef9efa" },
+  { name: "Business Acquisition Financing", desc: "Structured capital solutions for acquisitions of operating businesses. We arrange senior debt, mezzanine, and equity co-investment for qualified buyers.", img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf" },
+  { name: "Securities-Based Lending", desc: "Leverage your liquid portfolio without triggering a taxable event. We arrange non-purpose loans against publicly traded securities, private equity interests, and alternatives.", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40" },
+  { name: "Medical Working Capital", desc: "Revenue-based working capital for medical practices, outpatient facilities, and healthcare operators. Fast approvals, minimal documentation.", img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d" },
+  { name: "Debt Restructuring", desc: "Distressed debt advisory and recapitalization for borrowers facing maturity defaults, covenant breaches, or over-leveraged capital stacks. Discreet, experienced, results-driven.", img: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a" },
 ];
 
 interface Props {
@@ -27,6 +28,10 @@ const ServiceSections = ({ sectionRefs }: Props) => {
   const ctaRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const headlineRefs = useRef<(HTMLHeadingElement | null)[]>([]);
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isMobile = useIsMobile();
+
+  const getImgUrl = (base: string) =>
+    `${base}?w=${isMobile ? 600 : 800}&q=${isMobile ? 50 : 70}&auto=format&fit=crop`;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -41,8 +46,8 @@ const ServiceSections = ({ sectionRefs }: Props) => {
 
         if (!sectionEl) return;
 
-        // Parallax + scale on background — scrub 2.5, y -120, scale 1.15
-        if (bgEl) {
+        // Skip parallax on mobile for performance
+        if (bgEl && !isMobile) {
           gsap.fromTo(bgEl,
             { scale: 1.15 },
             {
@@ -59,7 +64,6 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           );
         }
 
-        // Vertical gold line — animate-line-grow on scroll entry
         if (line) {
           gsap.fromTo(line,
             { scaleY: 0, transformOrigin: "top" },
@@ -70,7 +74,6 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           );
         }
 
-        // Section number entrance
         if (num) {
           gsap.fromTo(num,
             { opacity: 0, x: -20 },
@@ -81,15 +84,14 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           );
         }
 
-        // OVA word-by-word headline entrance with perspective + rotateX
         if (headline) {
           const words = headline.querySelectorAll<HTMLElement>(".word-span");
           if (words.length > 0) {
             gsap.fromTo(words,
-              { opacity: 0, y: 80, rotateX: -40 },
+              { opacity: 0, y: isMobile ? 40 : 80, rotateX: isMobile ? 0 : -40 },
               {
                 opacity: 1, y: 0, rotateX: 0,
-                duration: 1.4, ease: "power4.out",
+                duration: isMobile ? 0.8 : 1.4, ease: "power4.out",
                 stagger: 0.06,
                 scrollTrigger: { trigger: sectionEl, start: "top 65%", once: true },
               }
@@ -97,7 +99,6 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           }
         }
 
-        // Gold divider width animation
         if (divider) {
           gsap.fromTo(divider,
             { width: 0 },
@@ -108,7 +109,6 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           );
         }
 
-        // CTA entrance
         if (cta) {
           gsap.fromTo(cta,
             { opacity: 0, y: 20 },
@@ -122,7 +122,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
     });
 
     return () => ctx.revert();
-  }, [sectionRefs]);
+  }, [sectionRefs, isMobile]);
 
   return (
     <>
@@ -134,7 +134,6 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           : "linear-gradient(to left, rgba(18,18,18,0.97) 45%, rgba(18,18,18,0.4) 100%)";
         const mobileGradient = "linear-gradient(to top, rgba(18,18,18,0.95) 60%, rgba(18,18,18,0.5) 100%)";
 
-        // Split headline into words for OVA-style animation
         const headlineWords = s.name.split(/\s+/);
 
         return (
@@ -148,8 +147,10 @@ const ServiceSections = ({ sectionRefs }: Props) => {
               ref={(el) => { bgRefs.current[i] = el; }}
               className="absolute bg-cover bg-center will-change-transform"
               style={{
-                backgroundImage: `url(${s.img})`,
-                top: "-120px", bottom: "-120px", left: 0, right: 0,
+                backgroundImage: `url(${getImgUrl(s.img)})`,
+                top: isMobile ? 0 : "-120px",
+                bottom: isMobile ? 0 : "-120px",
+                left: 0, right: 0,
               }}
             />
             <div className="absolute inset-0 hidden md:block" style={{ background: gradient }} />
@@ -157,7 +158,6 @@ const ServiceSections = ({ sectionRefs }: Props) => {
 
             <div className={`relative z-10 w-full flex justify-start ${isOdd ? "md:justify-start" : "md:justify-end"}`}>
               <div className="px-6 md:px-20 py-12 md:py-20 pb-16 md:pb-20 max-w-[560px]">
-                {/* Vertical gold line — OVA signature section marker */}
                 <div
                   ref={(el) => { lineRefs.current[i] = el; }}
                   className="w-[2px] h-[60px] bg-gold mb-4"
@@ -175,7 +175,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
                 <h2
                   ref={(el) => { headlineRefs.current[i] = el; }}
                   className="font-display font-light text-[40px] md:text-[72px] text-jwr-text leading-[1.1] mt-4"
-                  style={{ perspective: "1000px" }}
+                  style={{ perspective: isMobile ? undefined : "1000px" }}
                 >
                   {headlineWords.map((word, wi) => (
                     <span
@@ -202,7 +202,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
                 <SplitText
                   as="p"
                   className="font-body font-light text-base text-jwr-muted leading-[1.8] max-w-[440px]"
-                  scrub={1.5}
+                  scrub={isMobile ? false : 1.5}
                   triggerStart="top 65%"
                   triggerEnd="top 30%"
                 >

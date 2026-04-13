@@ -2,19 +2,23 @@ import { forwardRef, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitText from "./SplitText";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
   const bgRef = useRef<HTMLDivElement>(null);
   const overlineRef = useRef<HTMLParagraphElement>(null);
+  const isMobile = useIsMobile();
+
+  const imgUrl = `https://images.unsplash.com/photo-1497366216548-37526070297c?w=${isMobile ? 600 : 800}&q=${isMobile ? 50 : 70}&auto=format&fit=crop`;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const sectionEl = typeof ref === "function" ? null : ref?.current;
 
-      // Parallax + scale on bg (OVA style)
-      if (bgRef.current && sectionEl) {
+      // Skip parallax on mobile
+      if (bgRef.current && sectionEl && !isMobile) {
         gsap.fromTo(bgRef.current,
           { scale: 1.15 },
           {
@@ -29,7 +33,6 @@ const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
         );
       }
 
-      // Overline entrance
       if (overlineRef.current) {
         gsap.fromTo(overlineRef.current,
           { opacity: 0, y: 20 },
@@ -41,7 +44,7 @@ const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
       }
     });
     return () => ctx.revert();
-  }, [ref]);
+  }, [ref, isMobile]);
 
   return (
     <section
@@ -53,8 +56,10 @@ const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
         ref={bgRef}
         className="absolute bg-cover bg-center will-change-transform"
         style={{
-          backgroundImage: "url(https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=70)",
-          top: "-80px", bottom: "-80px", left: 0, right: 0,
+          backgroundImage: `url(${imgUrl})`,
+          top: isMobile ? 0 : "-80px",
+          bottom: isMobile ? 0 : "-80px",
+          left: 0, right: 0,
         }}
       />
       <div className="absolute inset-0" style={{ background: "rgba(18,18,18,0.88)" }} />
@@ -67,7 +72,7 @@ const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
         <SplitText
           as="h2"
           className="font-display font-light text-[42px] md:text-[84px] text-jwr-text leading-[1.1]"
-          scrub={1.5}
+          scrub={isMobile ? false : 1.5}
           triggerStart="top 75%"
           triggerEnd="top 35%"
         >
@@ -77,7 +82,7 @@ const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
         <SplitText
           as="p"
           className="font-body font-light text-base text-jwr-muted leading-[1.9] mt-8"
-          scrub={1.5}
+          scrub={isMobile ? false : 1.5}
           triggerStart="top 70%"
           triggerEnd="top 25%"
         >

@@ -1,4 +1,4 @@
-import { forwardRef, useRef, useEffect, useState } from "react";
+import { forwardRef, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitText from "./SplitText";
@@ -7,14 +7,14 @@ import { useIsMobile } from "@/hooks/use-mobile";
 gsap.registerPlugin(ScrollTrigger);
 
 const services = [
-  { name: "Ground Up Construction", tag: "Real Estate", img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=70" },
-  { name: "Commercial Real Estate", tag: "Real Estate", img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&q=70" },
-  { name: "Commercial Bridge Loans", tag: "Real Estate", img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&q=70" },
-  { name: "Equity Investments", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?w=400&q=70" },
-  { name: "Business Acquisition", tag: "Business Capital", img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&q=70" },
-  { name: "Securities-Based Lending", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&q=70" },
-  { name: "Medical Working Capital", tag: "Business Capital", img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&q=70" },
-  { name: "Debt Restructuring", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=400&q=70" },
+  { name: "Ground Up Construction", tag: "Real Estate", img: "https://images.unsplash.com/photo-1486325212027-8081e485255e" },
+  { name: "Commercial Real Estate", tag: "Real Estate", img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa" },
+  { name: "Commercial Bridge Loans", tag: "Real Estate", img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5" },
+  { name: "Equity Investments", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1444653614773-995cb1ef9efa" },
+  { name: "Business Acquisition", tag: "Business Capital", img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf" },
+  { name: "Securities-Based Lending", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40" },
+  { name: "Medical Working Capital", tag: "Business Capital", img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d" },
+  { name: "Debt Restructuring", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a" },
 ];
 
 const CARD_W = 260;
@@ -22,7 +22,9 @@ const CARD_H = 340;
 const CARD_GAP = 30;
 const MAX_ROTATE_Y = 40;
 const TRANSLATE_Z_FALLOFF = -120;
-const VISIBLE_CARDS = 7;
+
+const MOBILE_CARD_W = 220;
+const MOBILE_CARD_H = 280;
 
 const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -40,7 +42,6 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
     if (isMobile) return;
 
     const ctx = gsap.context(() => {
-      // Header entrance
       if (headerRef.current) {
         gsap.fromTo(headerRef.current,
           { opacity: 0, y: 60 },
@@ -50,10 +51,8 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
         );
       }
 
-      // Scroll-linked carousel rotation
       if (sectionRef.current && arcRef.current) {
         const totalCards = services.length;
-        // We animate progress from 0 (first card centered) to 1 (last card centered)
         gsap.fromTo(progressRef.current,
           { value: 0 },
           {
@@ -80,11 +79,10 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
   const updateCards = (progress: number, totalCards: number) => {
     if (!arcRef.current) return;
     const cards = arcRef.current.children;
-    // progress 0 = card 0 centered, progress 1 = last card centered
     const centerIndex = progress * (totalCards - 1);
 
     for (let i = 0; i < cards.length; i++) {
-      const offset = i - centerIndex; // negative = left, positive = right
+      const offset = i - centerIndex;
       const absOffset = Math.abs(offset);
       const clampedOffset = Math.max(-4, Math.min(4, offset));
       const rotateY = (clampedOffset / 4) * MAX_ROTATE_Y;
@@ -93,7 +91,6 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
       const opacity = absOffset > 4.5 ? 0 : 1 - Math.max(0, (absOffset - 3.5));
       const scale = 1 - Math.abs(clampedOffset) * 0.04;
 
-      // Glow intensity peaks at center (offset=0), fades by offset=1.2
       const glowIntensity = Math.max(0, 1 - absOffset / 1.2);
       const goldGlow = `0 0 ${30 * glowIntensity}px rgba(183,150,90,${0.35 * glowIntensity}), 0 40px 80px rgba(0,0,0,0.6)`;
       const borderOpacity = 0.4 * glowIntensity;
@@ -103,7 +100,6 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
       card.style.opacity = String(opacity);
       card.style.zIndex = String(100 - Math.round(absOffset * 10));
       card.style.boxShadow = goldGlow;
-      // Update border overlay
       const borderEl = card.querySelector('.card-border-overlay') as HTMLElement;
       if (borderEl) {
         borderEl.style.borderColor = `rgba(183,150,90,${borderOpacity})`;
@@ -111,32 +107,37 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
     }
   };
 
-  // Mobile fallback: standard horizontal scroll
+  const getImgUrl = (base: string) =>
+    `${base}?w=${isMobile ? 300 : 400}&q=${isMobile ? 50 : 70}&auto=format&fit=crop`;
+
   if (isMobile) {
     return (
-      <section ref={ref} id="services" className="py-[60px] noise-overlay" style={{ background: "#121212" }}>
+      <section ref={ref} id="services" className="py-[60px]" style={{ background: "#121212" }}>
         <div className="px-6 mb-8">
           <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">FINANCING SOLUTIONS</p>
-          <SplitText as="h2" className="font-display font-light text-[36px] text-jwr-text" scrub={false} triggerStart="top 85%">
+          <h2 className="font-display font-light text-[36px] text-jwr-text">
             Every capital need. One firm.
-          </SplitText>
+          </h2>
         </div>
-        <div className="flex gap-4 overflow-x-auto px-6 pb-4 scrollbar-hide" style={{ scrollSnapType: "x mandatory" }}>
+        <div className="flex gap-4 overflow-x-auto px-6 pb-4 scrollbar-hide" style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}>
           {services.map((s, i) => (
             <div
               key={i}
               onClick={() => scrollToService(i)}
-              className="flex-shrink-0 relative cursor-pointer group overflow-hidden"
-              style={{ width: CARD_W, height: CARD_H, borderRadius: 4, scrollSnapAlign: "start" }}
+              className="flex-shrink-0 relative cursor-pointer overflow-hidden"
+              style={{ width: MOBILE_CARD_W, height: MOBILE_CARD_H, borderRadius: 4, scrollSnapAlign: "start" }}
             >
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${s.img})` }}
+              <img
+                src={getImgUrl(s.img)}
+                alt={s.name}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(18,18,18,0.95) 35%, rgba(18,18,18,0.15) 100%)" }} />
-              <div className="absolute bottom-5 left-5 right-5">
+              <div className="absolute bottom-4 left-4 right-4">
                 <p className="font-body font-light text-[10px] tracking-[0.2em] text-gold mb-1">{s.tag}</p>
-                <h3 className="font-display font-normal text-[20px] text-jwr-text leading-tight">{s.name}</h3>
+                <h3 className="font-display font-normal text-[18px] text-jwr-text leading-tight">{s.name}</h3>
               </div>
             </div>
           ))}
@@ -153,7 +154,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
         else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el as HTMLDivElement;
       }}
       id="services"
-      className="noise-overlay relative"
+      className="relative"
       style={{ background: "#121212", height: "250vh" }}
     >
       <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
@@ -174,7 +175,6 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
             style={{ transformStyle: "preserve-3d", width: 0, height: CARD_H }}
           >
             {services.map((s, i) => {
-              // Initial positions: all cards start spread from center (card 0 centered)
               const offset = i;
               const clampedOffset = Math.max(-4, Math.min(4, offset));
               const rotateY = (clampedOffset / 4) * MAX_ROTATE_Y;
@@ -196,14 +196,16 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
                     transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg)`,
                     boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
                     opacity: Math.abs(offset) > 4.5 ? 0 : 1 - Math.max(0, (Math.abs(offset) - 3.5)),
-                    transition: "opacity 0.3s",
                     willChange: "transform",
                     backfaceVisibility: "hidden",
                   }}
                 >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                    style={{ backgroundImage: `url(${s.img})` }}
+                  <img
+                    src={getImgUrl(s.img)}
+                    alt={s.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div
                     className="absolute inset-0"

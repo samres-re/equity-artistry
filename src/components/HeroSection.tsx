@@ -1,7 +1,7 @@
 import { useState, useEffect, forwardRef, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitText from "./SplitText";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +16,7 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   // Word cycling
   useEffect(() => {
@@ -34,7 +35,6 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
     const ctx = gsap.context(() => {
       const sectionEl = typeof ref === "function" ? null : ref?.current;
 
-      // Cinematic stagger entrance
       const tl = gsap.timeline({ delay: 0.3 });
 
       if (overlineRef.current) {
@@ -58,8 +58,8 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
         tl.to(scrollIndicatorRef.current, { opacity: 1, duration: 1.5, ease: "power2.out" }, "-=0.3");
       }
 
-      // Pin hero
-      if (sectionEl) {
+      // Only pin hero on desktop
+      if (sectionEl && !isMobile) {
         ScrollTrigger.create({
           trigger: sectionEl,
           start: "top top",
@@ -68,7 +68,6 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
           pinSpacing: true,
         });
 
-        // Scrub: hero content fades + shifts as user scrolls away
         if (contentRef.current) {
           gsap.to(contentRef.current, {
             y: -100,
@@ -86,14 +85,14 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
     });
 
     return () => ctx.revert();
-  }, [ref]);
+  }, [ref, isMobile]);
 
   const scrollTo = (id: string) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section ref={ref} className="relative h-screen flex items-center justify-center noise-overlay" style={{ background: "#121212" }}>
+    <section ref={ref} className="relative h-screen flex items-center justify-center" style={{ background: "#121212" }}>
       <div className="absolute top-24 left-6 md:left-12 font-body font-light text-[11px] tracking-[0.2em] text-jwr-dim hidden md:block">
         EST. 2000
       </div>
@@ -143,7 +142,7 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
         </div>
       </div>
 
-      <div ref={scrollIndicatorRef} className="absolute bottom-0 left-0 right-0" style={{ opacity: 0 }}>
+      <div ref={scrollIndicatorRef} className="absolute bottom-0 left-0 right-0 hidden md:block" style={{ opacity: 0 }}>
         <div className="w-full h-px" style={{ background: "rgba(201,168,76,0.15)" }} />
         <div className="flex flex-col items-center py-6">
           <span className="font-body font-light text-[10px] tracking-[0.3em] text-jwr-dim">SCROLL</span>
