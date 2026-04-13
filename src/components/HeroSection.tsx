@@ -63,7 +63,7 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
         ScrollTrigger.create({
           trigger: sectionEl,
           start: "top top",
-          end: "40% top",
+          end: "60% top",
           pin: true,
           pinSpacing: true,
         });
@@ -71,13 +71,13 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
         // Scrub: hero content fades + shifts as user scrolls away
         if (contentRef.current) {
           gsap.to(contentRef.current, {
-            y: -60,
-            opacity: 0.3,
+            y: -100,
+            opacity: 0,
             ease: "none",
             scrollTrigger: {
               trigger: sectionEl,
               start: "top top",
-              end: "40% top",
+              end: "60% top",
               scrub: 1,
             },
           });

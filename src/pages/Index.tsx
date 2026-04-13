@@ -36,8 +36,8 @@ const Index = () => {
   // Lenis smooth scroll + GSAP ScrollTrigger sync
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: 1.8,
+      easing: (t: number) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
       smoothWheel: true,
     });
 
