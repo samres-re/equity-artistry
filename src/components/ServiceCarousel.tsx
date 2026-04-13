@@ -1,7 +1,8 @@
-import { forwardRef, useRef, useEffect } from "react";
+import { forwardRef, useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitText from "./SplitText";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,12 +17,28 @@ const services = [
   { name: "Debt Restructuring", tag: "Structured Capital", img: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=640&q=80" },
 ];
 
+const CARD_W = 300;
+const CARD_H = 380;
+const CARD_GAP = 40;
+const MAX_ROTATE_Y = 35;
+const TRANSLATE_Z_FALLOFF = -100;
+const VISIBLE_CARDS = 5;
+
 const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
   const headerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const imgRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
+  const arcRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef({ value: 0 });
+  const isMobile = useIsMobile();
+
+  const scrollToService = (index: number) => {
+    const el = document.getElementById(`service-section-${index + 1}`);
+    el?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
+    if (isMobile) return;
+
     const ctx = gsap.context(() => {
       // Header entrance
       if (headerRef.current) {
@@ -33,80 +50,163 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
         );
       }
 
-      // Card clip-path reveals with stagger
-      cardRefs.current.forEach((card, i) => {
-        if (!card) return;
-        const img = imgRefs.current[i];
-
-        // Clip-path reveal (OVA style)
-        gsap.fromTo(card,
-          { clipPath: "inset(100% 0% 0% 0%)", opacity: 1 },
+      // Scroll-linked carousel rotation
+      if (sectionRef.current && arcRef.current) {
+        const totalCards = services.length;
+        // We animate progress from 0 (first card centered) to 1 (last card centered)
+        gsap.fromTo(progressRef.current,
+          { value: 0 },
           {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1.6,
-            ease: "expo.inOut",
-            delay: i * 0.12,
-            scrollTrigger: { trigger: card, start: "top 90%", once: true },
+            value: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 20%",
+              end: "bottom 80%",
+              scrub: 1.5,
+              onUpdate: (self) => {
+                progressRef.current.value = self.progress;
+                updateCards(self.progress, totalCards);
+              },
+            },
           }
         );
-
-        // Image scale-in
-        if (img) {
-          gsap.fromTo(img,
-            { scale: 1.4 },
-            {
-              scale: 1,
-              duration: 1.6,
-              ease: "power3.out",
-              delay: i * 0.12,
-              scrollTrigger: { trigger: card, start: "top 90%", once: true },
-            }
-          );
-        }
-      });
+      }
     });
-    return () => ctx.revert();
-  }, []);
 
-  const scrollToService = (index: number) => {
-    const el = document.getElementById(`service-section-${index + 1}`);
-    el?.scrollIntoView({ behavior: "smooth" });
+    return () => ctx.revert();
+  }, [isMobile]);
+
+  const updateCards = (progress: number, totalCards: number) => {
+    if (!arcRef.current) return;
+    const cards = arcRef.current.children;
+    // progress 0 = card 0 centered, progress 1 = last card centered
+    const centerIndex = progress * (totalCards - 1);
+
+    for (let i = 0; i < cards.length; i++) {
+      const offset = i - centerIndex; // negative = left, positive = right
+      const clampedOffset = Math.max(-3, Math.min(3, offset));
+      const rotateY = (clampedOffset / 3) * MAX_ROTATE_Y;
+      const translateZ = TRANSLATE_Z_FALLOFF * Math.abs(clampedOffset / 3);
+      const translateX = offset * (CARD_W + CARD_GAP);
+      const opacity = Math.abs(offset) > 3.5 ? 0 : 1;
+      const scale = 1 - Math.abs(clampedOffset) * 0.04;
+
+      const card = cards[i] as HTMLElement;
+      card.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+      card.style.opacity = String(opacity);
+      card.style.zIndex = String(100 - Math.round(Math.abs(offset) * 10));
+    }
   };
 
-  return (
-    <section ref={ref} id="services" className="py-[120px] noise-overlay" style={{ background: "#080808" }}>
-      <div ref={headerRef} className="px-6 md:px-12 mb-12" style={{ opacity: 0 }}>
-        <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">FINANCING SOLUTIONS</p>
-        <SplitText as="h2" className="font-display font-light text-[48px] text-jwr-text" scrub={false} triggerStart="top 85%">
-          Every capital need. One firm.
-        </SplitText>
-      </div>
-
-      <div className="flex gap-6 overflow-x-auto px-6 md:px-12 pb-4 scrollbar-hide" style={{ scrollSnapType: "x mandatory" }}>
-        {services.map((s, i) => (
-          <div
-            key={i}
-            ref={(el) => { cardRefs.current[i] = el; }}
-            onClick={() => scrollToService(i)}
-            className="flex-shrink-0 w-[280px] md:w-[320px] h-[420px] relative cursor-pointer group overflow-hidden"
-            style={{ scrollSnapAlign: "start" }}
-          >
+  // Mobile fallback: standard horizontal scroll
+  if (isMobile) {
+    return (
+      <section ref={ref} id="services" className="py-[100px] noise-overlay" style={{ background: "#080808" }}>
+        <div className="px-6 mb-10">
+          <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">FINANCING SOLUTIONS</p>
+          <SplitText as="h2" className="font-display font-light text-[36px] text-jwr-text" scrub={false} triggerStart="top 85%">
+            Every capital need. One firm.
+          </SplitText>
+        </div>
+        <div className="flex gap-4 overflow-x-auto px-6 pb-4 scrollbar-hide" style={{ scrollSnapType: "x mandatory" }}>
+          {services.map((s, i) => (
             <div
-              ref={(el) => { imgRefs.current[i] = el; }}
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105 will-change-transform"
-              style={{ backgroundImage: `url(${s.img})` }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to top, rgba(8,8,8,0.95) 40%, rgba(8,8,8,0.2) 100%)" }}
-            />
-            <div className="absolute inset-0 border border-transparent group-hover:border-gold/40 transition-colors duration-300" />
-            <div className="absolute bottom-6 left-6 right-6">
-              <h3 className="font-display font-normal text-[22px] text-jwr-text">{s.name}</h3>
-              <p className="font-body font-light text-[10px] tracking-[0.2em] text-gold mt-1">{s.tag}</p>
+              key={i}
+              onClick={() => scrollToService(i)}
+              className="flex-shrink-0 relative cursor-pointer group overflow-hidden"
+              style={{ width: CARD_W, height: CARD_H, borderRadius: 4, scrollSnapAlign: "start" }}
+            >
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${s.img})` }}
+              />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(8,8,8,0.95) 35%, rgba(8,8,8,0.15) 100%)" }} />
+              <div className="absolute bottom-5 left-5 right-5">
+                <p className="font-body font-light text-[10px] tracking-[0.2em] text-gold mb-1">{s.tag}</p>
+                <h3 className="font-display font-normal text-[20px] text-jwr-text leading-tight">{s.name}</h3>
+              </div>
             </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      ref={(el) => {
+        sectionRef.current = el;
+        if (typeof ref === "function") ref(el as HTMLDivElement);
+        else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el as HTMLDivElement;
+      }}
+      id="services"
+      className="noise-overlay relative"
+      style={{ background: "#080808", height: "250vh" }}
+    >
+      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+        <div ref={headerRef} className="px-6 md:px-12 mb-16" style={{ opacity: 0 }}>
+          <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">FINANCING SOLUTIONS</p>
+          <SplitText as="h2" className="font-display font-light text-[48px] text-jwr-text" scrub={false} triggerStart="top 85%">
+            Every capital need. One firm.
+          </SplitText>
+        </div>
+
+        <div
+          className="relative flex items-center justify-center"
+          style={{ perspective: "1200px", height: CARD_H + 60 }}
+        >
+          <div
+            ref={arcRef}
+            className="relative"
+            style={{ transformStyle: "preserve-3d", width: 0, height: CARD_H }}
+          >
+            {services.map((s, i) => {
+              // Initial positions: all cards start spread from center (card 0 centered)
+              const offset = i;
+              const clampedOffset = Math.max(-3, Math.min(3, offset));
+              const rotateY = (clampedOffset / 3) * MAX_ROTATE_Y;
+              const translateZ = TRANSLATE_Z_FALLOFF * Math.abs(clampedOffset / 3);
+              const translateX = offset * (CARD_W + CARD_GAP);
+
+              return (
+                <div
+                  key={i}
+                  onClick={() => scrollToService(i)}
+                  className="absolute cursor-pointer group"
+                  style={{
+                    width: CARD_W,
+                    height: CARD_H,
+                    borderRadius: 4,
+                    overflow: "hidden",
+                    left: -CARD_W / 2,
+                    top: 0,
+                    transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg)`,
+                    boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
+                    opacity: Math.abs(offset) > 3.5 ? 0 : 1,
+                    transition: "opacity 0.3s",
+                    willChange: "transform",
+                    backfaceVisibility: "hidden",
+                  }}
+                >
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                    style={{ backgroundImage: `url(${s.img})` }}
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(to top, rgba(8,8,8,0.95) 35%, rgba(8,8,8,0.15) 100%)" }}
+                  />
+                  <div className="absolute inset-0 border border-transparent group-hover:border-gold/40 transition-colors duration-300" style={{ borderRadius: 4 }} />
+                  <div className="absolute bottom-5 left-5 right-5">
+                    <p className="font-body font-light text-[10px] tracking-[0.2em] text-gold mb-1">{s.tag}</p>
+                    <h3 className="font-display font-normal text-[20px] text-jwr-text leading-tight">{s.name}</h3>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        ))}
+        </div>
       </div>
     </section>
   );
