@@ -1,6 +1,7 @@
 import { useState, useEffect, forwardRef, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitText from "./SplitText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +12,12 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
   const [visible, setVisible] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
+  const overlineRef = useRef<HTMLParagraphElement>(null);
+  const subRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
+  // Word cycling
   useEffect(() => {
     const interval = setInterval(() => {
       setVisible(false);
@@ -23,20 +29,36 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
     return () => clearInterval(interval);
   }, []);
 
+  // GSAP entrance + pin + scrub
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Entrance stagger animation
-      const children = contentRef.current?.children;
-      if (children) {
-        gsap.fromTo(
-          Array.from(children),
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.3 }
-        );
+      const sectionEl = typeof ref === "function" ? null : ref?.current;
+
+      // Cinematic stagger entrance
+      const tl = gsap.timeline({ delay: 0.3 });
+
+      if (overlineRef.current) {
+        gsap.set(overlineRef.current, { opacity: 0, y: 20 });
+        tl.to(overlineRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" });
+      }
+      if (headlineRef.current) {
+        gsap.set(headlineRef.current, { opacity: 0, y: 40 });
+        tl.to(headlineRef.current, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, "-=0.6");
+      }
+      if (subRef.current) {
+        gsap.set(subRef.current, { opacity: 0, y: 20 });
+        tl.to(subRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.6");
+      }
+      if (ctaRef.current) {
+        gsap.set(ctaRef.current, { opacity: 0, y: 20 });
+        tl.to(ctaRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5");
+      }
+      if (scrollIndicatorRef.current) {
+        gsap.set(scrollIndicatorRef.current, { opacity: 0 });
+        tl.to(scrollIndicatorRef.current, { opacity: 1, duration: 1.5, ease: "power2.out" }, "-=0.3");
       }
 
       // Pin hero
-      const sectionEl = typeof ref === "function" ? null : ref?.current;
       if (sectionEl) {
         ScrollTrigger.create({
           trigger: sectionEl,
@@ -45,20 +67,21 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
           pin: true,
           pinSpacing: true,
         });
-      }
 
-      // Scrub headline
-      if (headlineRef.current && sectionEl) {
-        gsap.to(headlineRef.current, {
-          y: -30,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionEl,
-            start: "top top",
-            end: "40% top",
-            scrub: true,
-          },
-        });
+        // Scrub: hero content fades + shifts as user scrolls away
+        if (contentRef.current) {
+          gsap.to(contentRef.current, {
+            y: -60,
+            opacity: 0.3,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionEl,
+              start: "top top",
+              end: "40% top",
+              scrub: 1,
+            },
+          });
+        }
       }
     });
 
@@ -75,15 +98,15 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
         EST. 2000
       </div>
 
-      <div ref={contentRef} className="text-center px-6 max-w-4xl">
-        <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-8">
+      <div ref={contentRef} className="text-center px-6 max-w-4xl will-change-transform">
+        <p ref={overlineRef} className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-8" style={{ opacity: 0 }}>
           PRIVATE CAPITAL ADVISORY
         </p>
 
         <h1
           ref={headlineRef}
           className="font-display font-light text-jwr-text leading-[1.05]"
-          style={{ fontSize: "clamp(52px, 7vw, 96px)" }}
+          style={{ fontSize: "clamp(52px, 7vw, 96px)", opacity: 0 }}
         >
           Capital solutions for
           <br />
@@ -100,11 +123,11 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
           </span>
         </h1>
 
-        <p className="font-body font-light text-base text-jwr-muted max-w-[480px] mx-auto mt-8 leading-[1.7]">
+        <p ref={subRef} className="font-body font-light text-base text-jwr-muted max-w-[480px] mx-auto mt-8 leading-[1.7]" style={{ opacity: 0 }}>
           Arranging debt and equity up to $10B+ across real estate, construction, and business capital since 1999.
         </p>
 
-        <div className="flex items-center justify-center gap-4 mt-10">
+        <div ref={ctaRef} className="flex items-center justify-center gap-4 mt-10" style={{ opacity: 0 }}>
           <button
             onClick={() => scrollTo("#contact")}
             className="font-display font-normal text-[15px] tracking-[0.12em] bg-gold text-jwr-bg px-8 py-3.5 hover:bg-gold-light transition-colors duration-300"
@@ -120,7 +143,7 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0">
+      <div ref={scrollIndicatorRef} className="absolute bottom-0 left-0 right-0" style={{ opacity: 0 }}>
         <div className="w-full h-px" style={{ background: "rgba(201,168,76,0.15)" }} />
         <div className="flex flex-col items-center py-6">
           <span className="font-body font-light text-[10px] tracking-[0.3em] text-jwr-dim">SCROLL</span>

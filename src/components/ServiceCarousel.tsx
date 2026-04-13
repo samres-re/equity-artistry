@@ -1,6 +1,7 @@
 import { forwardRef, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitText from "./SplitText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,12 +17,13 @@ const services = [
 ];
 
 const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const imgRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Header entrance
       if (headerRef.current) {
         gsap.fromTo(headerRef.current,
           { opacity: 0, y: 60 },
@@ -31,14 +33,36 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
         );
       }
 
+      // Card clip-path reveals with stagger
       cardRefs.current.forEach((card, i) => {
         if (!card) return;
+        const img = imgRefs.current[i];
+
+        // Clip-path reveal (OVA style)
         gsap.fromTo(card,
-          { opacity: 0, y: 60 },
-          { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", delay: i * 0.1,
-            scrollTrigger: { trigger: card, start: "top 90%", once: true }
+          { clipPath: "inset(100% 0% 0% 0%)", opacity: 1 },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 1.2,
+            ease: "power4.inOut",
+            delay: i * 0.08,
+            scrollTrigger: { trigger: card, start: "top 90%", once: true },
           }
         );
+
+        // Image scale-in
+        if (img) {
+          gsap.fromTo(img,
+            { scale: 1.3 },
+            {
+              scale: 1,
+              duration: 1.6,
+              ease: "power3.out",
+              delay: i * 0.08,
+              scrollTrigger: { trigger: card, start: "top 90%", once: true },
+            }
+          );
+        }
       });
     });
     return () => ctx.revert();
@@ -53,20 +77,23 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
     <section ref={ref} id="services" className="py-[120px] noise-overlay" style={{ background: "#080808" }}>
       <div ref={headerRef} className="px-6 md:px-12 mb-12" style={{ opacity: 0 }}>
         <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">FINANCING SOLUTIONS</p>
-        <h2 className="font-display font-light text-[48px] text-jwr-text">Every capital need. One firm.</h2>
+        <SplitText as="h2" className="font-display font-light text-[48px] text-jwr-text" scrub={false} triggerStart="top 85%">
+          Every capital need. One firm.
+        </SplitText>
       </div>
 
-      <div ref={scrollRef} className="flex gap-6 overflow-x-auto px-6 md:px-12 pb-4 scrollbar-hide" style={{ scrollSnapType: "x mandatory" }}>
+      <div className="flex gap-6 overflow-x-auto px-6 md:px-12 pb-4 scrollbar-hide" style={{ scrollSnapType: "x mandatory" }}>
         {services.map((s, i) => (
           <div
             key={i}
             ref={(el) => { cardRefs.current[i] = el; }}
             onClick={() => scrollToService(i)}
             className="flex-shrink-0 w-[280px] md:w-[320px] h-[420px] relative cursor-pointer group overflow-hidden"
-            style={{ scrollSnapAlign: "start", border: "1px solid transparent", opacity: 0 }}
+            style={{ scrollSnapAlign: "start" }}
           >
             <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+              ref={(el) => { imgRefs.current[i] = el; }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105 will-change-transform"
               style={{ backgroundImage: `url(${s.img})` }}
             />
             <div

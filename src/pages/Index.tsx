@@ -1,4 +1,7 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import MetricsSection from "@/components/MetricsSection";
@@ -8,6 +11,8 @@ import WhyJWRSection from "@/components/WhyJWRSection";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
   const sectionRef1 = useRef<HTMLDivElement>(null);
@@ -27,6 +32,27 @@ const Index = () => {
   const contactRef = useRef<HTMLDivElement>(null);
 
   const sectionRefs = [sectionRef1, sectionRef2, sectionRef3, sectionRef4, sectionRef5, sectionRef6, sectionRef7, sectionRef8];
+
+  // Lenis smooth scroll + GSAP ScrollTrigger sync
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    lenis.on("scroll", ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      lenis.destroy();
+      gsap.ticker.remove(lenis.raf as any);
+    };
+  }, []);
 
   return (
     <div className="noise-overlay" style={{ background: "#080808" }}>
