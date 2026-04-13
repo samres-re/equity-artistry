@@ -30,7 +30,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
   const bgRefs = useRef<(HTMLDivElement | null)[]>([]);
   const dividerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-  const ctaRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  
   const headlineRefs = useRef<(HTMLHeadingElement | null)[]>([]);
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
   const isMobile = useIsMobile();
@@ -45,7 +45,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
         const bgEl = bgRefs.current[i];
         const divider = dividerRefs.current[i];
         const num = numberRefs.current[i];
-        const cta = ctaRefs.current[i];
+        
         const headline = headlineRefs.current[i];
         const line = lineRefs.current[i];
 
@@ -114,15 +114,6 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           );
         }
 
-        if (cta) {
-          gsap.fromTo(cta,
-            { opacity: 0, y: 20 },
-            {
-              opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
-              scrollTrigger: { trigger: sectionEl, start: "top 45%", once: true },
-            }
-          );
-        }
       });
     });
 
@@ -215,12 +206,10 @@ const ServiceSections = ({ sectionRefs }: Props) => {
                 </SplitText>
 
                 <button
-                  ref={(el) => { ctaRefs.current[i] = el; }}
                   className="mt-8 font-body font-light text-[13px] tracking-[0.15em] text-gold hover:tracking-[0.25em] transition-all duration-300"
-                  style={{ opacity: 0 }}
                   onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
                 >
-                  Learn More →
+                  Get Financing →
                 </button>
               </div>
             </div>
