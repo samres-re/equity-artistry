@@ -86,11 +86,11 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
     for (let i = 0; i < cards.length; i++) {
       const offset = i - centerIndex; // negative = left, positive = right
       const absOffset = Math.abs(offset);
-      const clampedOffset = Math.max(-3, Math.min(3, offset));
-      const rotateY = (clampedOffset / 3) * MAX_ROTATE_Y;
-      const translateZ = TRANSLATE_Z_FALLOFF * Math.abs(clampedOffset / 3);
+      const clampedOffset = Math.max(-4, Math.min(4, offset));
+      const rotateY = (clampedOffset / 4) * MAX_ROTATE_Y;
+      const translateZ = TRANSLATE_Z_FALLOFF * Math.abs(clampedOffset / 4);
       const translateX = offset * (CARD_W + CARD_GAP);
-      const opacity = absOffset > 3.5 ? 0 : 1;
+      const opacity = absOffset > 4.5 ? 0 : 1 - Math.max(0, (absOffset - 3.5));
       const scale = 1 - Math.abs(clampedOffset) * 0.04;
 
       // Glow intensity peaks at center (offset=0), fades by offset=1.2
@@ -195,7 +195,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
                     top: 0,
                     transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg)`,
                     boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
-                    opacity: Math.abs(offset) > 3.5 ? 0 : 1,
+                    opacity: Math.abs(offset) > 4.5 ? 0 : 1 - Math.max(0, (Math.abs(offset) - 3.5)),
                     transition: "opacity 0.3s",
                     willChange: "transform",
                     backfaceVisibility: "hidden",
@@ -218,9 +218,6 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
               );
             })}
           </div>
-          {/* Edge vignettes */}
-          <div className="absolute left-0 top-0 bottom-0 w-[200px] pointer-events-none z-10" style={{ background: "linear-gradient(to right, #121212 0%, transparent 100%)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-[200px] pointer-events-none z-10" style={{ background: "linear-gradient(to left, #121212 0%, transparent 100%)" }} />
         </div>
       </div>
     </section>
