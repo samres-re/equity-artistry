@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitText from "./SplitText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,45 +22,68 @@ interface Props {
 
 const ServiceSections = ({ sectionRefs }: Props) => {
   const bgRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const textBlockRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const dividerRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  const ctaRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       services.forEach((_, i) => {
         const sectionEl = sectionRefs[i]?.current;
         const bgEl = bgRefs.current[i];
-        const textEl = textBlockRefs.current[i];
+        const divider = dividerRefs.current[i];
+        const num = numberRefs.current[i];
+        const cta = ctaRefs.current[i];
 
         if (!sectionEl) return;
 
-        // Parallax on background image
+        // Parallax + scale on background (OVA style)
         if (bgEl) {
-          gsap.to(bgEl, {
-            y: -80,
-            ease: "none",
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1.5,
-            },
-          });
-        }
-
-        // Text entrance with stagger
-        if (textEl) {
-          const children = textEl.children;
-          gsap.fromTo(
-            Array.from(children),
-            { opacity: 0, y: 60 },
+          gsap.fromTo(bgEl,
+            { scale: 1.1 },
             {
-              opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
-              stagger: 0.15,
+              scale: 1,
+              y: -80,
+              ease: "none",
               scrollTrigger: {
                 trigger: sectionEl,
-                start: "top 70%",
-                once: true,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1.5,
               },
+            }
+          );
+        }
+
+        // Section number entrance
+        if (num) {
+          gsap.fromTo(num,
+            { opacity: 0, x: -20 },
+            {
+              opacity: 1, x: 0, duration: 1, ease: "power3.out",
+              scrollTrigger: { trigger: sectionEl, start: "top 60%", once: true },
+            }
+          );
+        }
+
+        // Gold divider width animation
+        if (divider) {
+          gsap.fromTo(divider,
+            { width: 0 },
+            {
+              width: 48, duration: 1.2, ease: "power3.inOut",
+              scrollTrigger: { trigger: sectionEl, start: "top 55%", once: true },
+            }
+          );
+        }
+
+        // CTA entrance
+        if (cta) {
+          gsap.fromTo(cta,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+              scrollTrigger: { trigger: sectionEl, start: "top 45%", once: true },
             }
           );
         }
@@ -87,30 +111,52 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           >
             <div
               ref={(el) => { bgRefs.current[i] = el; }}
-              className="absolute inset-0 bg-cover bg-center will-change-transform"
-              style={{ backgroundImage: `url(${s.img})`, top: "-40px", bottom: "-40px" }}
+              className="absolute bg-cover bg-center will-change-transform"
+              style={{
+                backgroundImage: `url(${s.img})`,
+                top: "-80px", bottom: "-80px", left: 0, right: 0,
+              }}
             />
             <div className="absolute inset-0" style={{ background: gradient }} />
 
             <div className={`relative z-10 w-full flex ${isOdd ? "justify-start" : "justify-end"}`}>
-              <div
-                ref={(el) => { textBlockRefs.current[i] = el; }}
-                className="px-8 md:px-20 py-20 max-w-[560px]"
-              >
-                <p className="font-display font-light text-[13px] tracking-[0.3em] text-gold" style={{ opacity: 0 }}>
+              <div className="px-8 md:px-20 py-20 max-w-[560px]">
+                <p
+                  ref={(el) => { numberRefs.current[i] = el; }}
+                  className="font-display font-light text-[13px] tracking-[0.3em] text-gold"
+                  style={{ opacity: 0 }}
+                >
                   {num}
                 </p>
-                <h2
+
+                <SplitText
+                  as="h2"
                   className="font-display font-light text-jwr-text leading-[1.1] mt-4"
-                  style={{ fontSize: "clamp(36px, 4vw, 64px)", opacity: 0 }}
+                  scrub={1.5}
+                  triggerStart="top 70%"
+                  triggerEnd="top 40%"
                 >
                   {s.name}
-                </h2>
-                <div className="w-12 h-px bg-gold my-6" style={{ opacity: 0 }} />
-                <p className="font-body font-light text-base text-jwr-muted leading-[1.8] max-w-[440px]" style={{ opacity: 0 }}>
+                </SplitText>
+
+                <div
+                  ref={(el) => { dividerRefs.current[i] = el; }}
+                  className="h-px bg-gold my-6"
+                  style={{ width: 0 }}
+                />
+
+                <SplitText
+                  as="p"
+                  className="font-body font-light text-base text-jwr-muted leading-[1.8] max-w-[440px]"
+                  scrub={1.5}
+                  triggerStart="top 65%"
+                  triggerEnd="top 30%"
+                >
                   {s.desc}
-                </p>
+                </SplitText>
+
                 <button
+                  ref={(el) => { ctaRefs.current[i] = el; }}
                   className="mt-8 font-body font-light text-[13px] tracking-[0.15em] text-gold hover:tracking-[0.25em] transition-all duration-300"
                   style={{ opacity: 0 }}
                 >

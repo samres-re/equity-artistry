@@ -17,7 +17,6 @@ function CountUp({ target, prefix, suffix, triggered }: { target: number; prefix
     if (!triggered) return;
     const duration = 2000;
     const startTime = performance.now();
-
     const tick = (now: number) => {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
@@ -38,17 +37,30 @@ function CountUp({ target, prefix, suffix, triggered }: { target: number; prefix
 const MetricsSection = forwardRef<HTMLDivElement>((_, ref) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [triggered, setTriggered] = useState(false);
+  const columnsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (!sectionRef.current) return;
 
+      // Trigger counter on enter
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top 80%",
         once: true,
         onEnter: () => setTriggered(true),
       });
+
+      // Stagger column reveals
+      const cols = columnsRef.current.filter(Boolean);
+      gsap.fromTo(
+        cols,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0, duration: 1, ease: "power3.out", stagger: 0.2,
+          scrollTrigger: { trigger: sectionRef.current, start: "top 80%", once: true },
+        }
+      );
     });
     return () => ctx.revert();
   }, []);
@@ -71,8 +83,9 @@ const MetricsSection = forwardRef<HTMLDivElement>((_, ref) => {
         {metrics.map((m, i) => (
           <div
             key={i}
+            ref={(el) => { columnsRef.current[i] = el; }}
             className="flex flex-col items-center justify-center"
-            style={{ borderRight: i < 2 ? "1px solid rgba(201,168,76,0.1)" : "none" }}
+            style={{ borderRight: i < 2 ? "1px solid rgba(201,168,76,0.1)" : "none", opacity: 0 }}
           >
             <CountUp target={m.value} prefix={m.prefix} suffix={m.suffix} triggered={triggered} />
             <span className="font-body font-light text-[11px] tracking-[0.25em] text-jwr-muted mt-2">{m.label}</span>

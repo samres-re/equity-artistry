@@ -1,6 +1,7 @@
 import { forwardRef, useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitText from "./SplitText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,25 +20,35 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
   const [form, setForm] = useState({
     name: "", company: "", phone: "", email: "", type: "", amount: "", description: "",
   });
-  const contentRef = useRef<HTMLDivElement>(null);
+  const leftRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      if (!contentRef.current) return;
-      const children = contentRef.current.children;
-      gsap.fromTo(
-        Array.from(children),
-        { opacity: 0, y: 60 },
-        {
-          opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
-          stagger: 0.15,
-          scrollTrigger: {
-            trigger: contentRef.current,
-            start: "top 75%",
-            once: true,
-          },
-        }
-      );
+      // Left column entrance
+      if (leftRef.current) {
+        gsap.fromTo(leftRef.current,
+          { opacity: 0, x: -40 },
+          {
+            opacity: 1, x: 0, duration: 1.2, ease: "power3.out",
+            scrollTrigger: { trigger: leftRef.current, start: "top 75%", once: true },
+          }
+        );
+      }
+
+      // Form fields stagger (clip-path reveal)
+      if (formRef.current) {
+        const fields = formRef.current.children;
+        gsap.fromTo(
+          Array.from(fields),
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
+            stagger: 0.08,
+            scrollTrigger: { trigger: formRef.current, start: "top 75%", once: true },
+          }
+        );
+      }
     });
     return () => ctx.revert();
   }, []);
@@ -48,10 +59,12 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <section ref={ref} id="contact" className="py-[160px] px-6 md:px-20 noise-overlay" style={{ background: "#080808" }}>
-      <div ref={contentRef} className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20">
-        <div style={{ opacity: 0 }}>
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20">
+        <div ref={leftRef} style={{ opacity: 0 }}>
           <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">GET STARTED</p>
-          <h2 className="font-display font-light text-[48px] text-jwr-text leading-[1.1]">Tell us about your deal.</h2>
+          <SplitText as="h2" className="font-display font-light text-[48px] text-jwr-text leading-[1.1]" scrub={false} triggerStart="top 80%">
+            Tell us about your deal.
+          </SplitText>
           <p className="font-body font-light text-[15px] text-jwr-muted mt-6 leading-[1.7]">
             Submit your details and a member of our team will respond within 24 hours.
           </p>
@@ -59,24 +72,24 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
           <p className="font-body font-light text-[14px] text-jwr-muted mt-2">jwinick31@gmail.com</p>
         </div>
 
-        <form className="flex flex-col gap-2" onSubmit={(e) => e.preventDefault()} style={{ opacity: 0 }}>
-          <input name="name" placeholder="Full Name" className={inputClass} value={form.name} onChange={handleChange} />
-          <input name="company" placeholder="Company Name" className={inputClass} value={form.company} onChange={handleChange} />
-          <input name="phone" placeholder="Phone Number" className={inputClass} value={form.phone} onChange={handleChange} />
-          <input name="email" placeholder="Email Address" type="email" className={inputClass} value={form.email} onChange={handleChange} />
+        <form ref={formRef} className="flex flex-col gap-2" onSubmit={(e) => e.preventDefault()}>
+          <input name="name" placeholder="Full Name" className={inputClass} value={form.name} onChange={handleChange} style={{ opacity: 0 }} />
+          <input name="company" placeholder="Company Name" className={inputClass} value={form.company} onChange={handleChange} style={{ opacity: 0 }} />
+          <input name="phone" placeholder="Phone Number" className={inputClass} value={form.phone} onChange={handleChange} style={{ opacity: 0 }} />
+          <input name="email" placeholder="Email Address" type="email" className={inputClass} value={form.email} onChange={handleChange} style={{ opacity: 0 }} />
           <select
             name="type"
             className={`${inputClass} appearance-none cursor-pointer`}
             value={form.type}
             onChange={handleChange}
-            style={{ color: form.type ? "#F0EDE6" : "#3A3A3A" }}
+            style={{ color: form.type ? "#F0EDE6" : "#3A3A3A", opacity: 0 }}
           >
             <option value="" disabled>Financing Type</option>
             {financingTypes.map((t) => (
               <option key={t} value={t} className="bg-jwr-bg text-jwr-text">{t}</option>
             ))}
           </select>
-          <input name="amount" placeholder="Loan Amount Requested" className={inputClass} value={form.amount} onChange={handleChange} />
+          <input name="amount" placeholder="Loan Amount Requested" className={inputClass} value={form.amount} onChange={handleChange} style={{ opacity: 0 }} />
           <textarea
             name="description"
             placeholder="Brief Project Description"
@@ -84,10 +97,12 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
             className={`${inputClass} resize-none`}
             value={form.description}
             onChange={handleChange}
+            style={{ opacity: 0 }}
           />
           <button
             type="submit"
             className="w-full bg-gold text-jwr-bg font-display font-normal text-[18px] tracking-[0.15em] py-[18px] mt-6 hover:bg-gold-light transition-colors duration-300"
+            style={{ opacity: 0 }}
           >
             Submit
           </button>
