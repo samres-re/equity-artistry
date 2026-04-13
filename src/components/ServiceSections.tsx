@@ -30,7 +30,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
   const bgRefs = useRef<(HTMLDivElement | null)[]>([]);
   const dividerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-  const ctaRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  
   const headlineRefs = useRef<(HTMLHeadingElement | null)[]>([]);
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
   const isMobile = useIsMobile();
