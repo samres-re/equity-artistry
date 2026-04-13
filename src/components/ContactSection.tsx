@@ -7,10 +7,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 const financingTypes = [
   "Ground Up Construction", "Commercial Real Estate", "Commercial Bridge Loans",
-  "Equity Investments", "Business Acquisition", "Securities-Based Lending",
-  "Medical Working Capital", "Debt Restructuring", "SBA Loans",
-  "Mezzanine Financing", "Joint Venture Equity", "Portfolio Refinance",
-  "Working Capital", "Equipment Financing",
+  "Fix and Flip", "Equity Investments", "Business Acquisition",
+  "Securities-Based Lending", "Business Term Loans", "Unsecured Business Loans",
+  "Accounts Receivable", "Equipment Financing", "Medical Working Capital",
+  "Debt Restructuring", "SBA Loans", "Mezzanine Financing",
+  "Joint Venture Equity", "Portfolio Refinance", "Working Capital",
 ];
 
 const inputClass =

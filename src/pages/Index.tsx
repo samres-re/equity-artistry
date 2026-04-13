@@ -17,14 +17,7 @@ const Footer = lazy(() => import("@/components/Footer"));
 gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
-  const sectionRef1 = useRef<HTMLDivElement>(null);
-  const sectionRef2 = useRef<HTMLDivElement>(null);
-  const sectionRef3 = useRef<HTMLDivElement>(null);
-  const sectionRef4 = useRef<HTMLDivElement>(null);
-  const sectionRef5 = useRef<HTMLDivElement>(null);
-  const sectionRef6 = useRef<HTMLDivElement>(null);
-  const sectionRef7 = useRef<HTMLDivElement>(null);
-  const sectionRef8 = useRef<HTMLDivElement>(null);
+  const serviceSectionRefs = Array.from({ length: 13 }, () => useRef<HTMLDivElement>(null));
 
   const heroRef = useRef<HTMLDivElement>(null);
   const metricsRef = useRef<HTMLDivElement>(null);
@@ -32,8 +25,6 @@ const Index = () => {
   const whyRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
-
-  const sectionRefs = [sectionRef1, sectionRef2, sectionRef3, sectionRef4, sectionRef5, sectionRef6, sectionRef7, sectionRef8];
 
   // Lenis smooth scroll + GSAP ScrollTrigger sync
   useEffect(() => {
@@ -63,7 +54,7 @@ const Index = () => {
       <MetricsSection ref={metricsRef} />
       <Suspense fallback={null}>
         <ServiceCarousel ref={carouselRef} />
-        <ServiceSections sectionRefs={sectionRefs} />
+        <ServiceSections sectionRefs={serviceSectionRefs} />
         <WhyJWRSection ref={whyRef} />
         <AboutSection ref={aboutRef} />
         <ContactSection ref={contactRef} />
