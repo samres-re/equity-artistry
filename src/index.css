@@ -11,8 +11,8 @@
     --gold-light: 39 62% 68%;
     --gold-dim: 39 76% 31%;
     --text-primary: 40 18% 92%;
-    --text-muted: 0 0% 42%;
-    --text-dim: 0 0% 23%;
+    --text-muted: 0 0% 55%;
+    --text-dim: 0 0% 32%;
     --border-gold: 43 52% 54% / 0.2;
 
     --background: 0 0% 7.1%;
@@ -22,7 +22,7 @@
     --secondary: 0 0% 9.4%;
     --secondary-foreground: 40 18% 92%;
     --muted: 0 0% 9.4%;
-    --muted-foreground: 0 0% 42%;
+    --muted-foreground: 0 0% 55%;
     --accent: 43 52% 54%;
     --accent-foreground: 0 0% 3.1%;
     --card: 0 0% 10.2%;
