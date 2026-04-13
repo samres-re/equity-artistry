@@ -58,7 +58,7 @@ const WhyJWRSection = forwardRef<HTMLDivElement>((_, ref) => {
   }, []);
 
   return (
-    <section ref={ref} id="why-jwr" className="py-[160px] px-6 md:px-20" style={{ background: "#0a0a0a" }}>
+    <section ref={ref} id="why-jwr" className="py-[160px] px-6 md:px-20" style={{ background: "#141414" }}>
       <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-16">
         <div className="md:col-span-2">
           <blockquote ref={quoteRef} className="font-display italic font-light text-[42px] text-jwr-text leading-[1.2]" style={{ opacity: 0 }}>

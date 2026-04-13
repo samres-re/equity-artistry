@@ -21,7 +21,7 @@ const Navbar = () => {
       <nav
         className="fixed top-0 left-0 right-0 z-50 h-[72px] flex items-center justify-between px-6 md:px-12"
         style={{
-          background: "rgba(8,8,8,0.85)",
+          background: "rgba(18,18,18,0.85)",
           backdropFilter: "blur(12px)",
           borderBottom: "1px solid rgba(201,168,76,0.1)",
         }}
@@ -58,7 +58,7 @@ const Navbar = () => {
       {open && (
         <div
           className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 transition-opacity"
-          style={{ background: "rgba(8,8,8,0.97)" }}
+          style={{ background: "rgba(18,18,18,0.97)" }}
         >
           {links.map((l) => (
             <button

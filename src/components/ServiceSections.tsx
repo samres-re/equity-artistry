@@ -130,8 +130,8 @@ const ServiceSections = ({ sectionRefs }: Props) => {
         const isOdd = i % 2 === 0;
         const num = String(i + 1).padStart(2, "0");
         const gradient = isOdd
-          ? "linear-gradient(to right, rgba(8,8,8,0.97) 45%, rgba(8,8,8,0.4) 100%)"
-          : "linear-gradient(to left, rgba(8,8,8,0.97) 45%, rgba(8,8,8,0.4) 100%)";
+          ? "linear-gradient(to right, rgba(18,18,18,0.97) 45%, rgba(18,18,18,0.4) 100%)"
+          : "linear-gradient(to left, rgba(18,18,18,0.97) 45%, rgba(18,18,18,0.4) 100%)";
 
         // Split headline into words for OVA-style animation
         const headlineWords = s.name.split(/\s+/);

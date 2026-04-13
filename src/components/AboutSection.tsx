@@ -57,7 +57,7 @@ const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
           top: "-80px", bottom: "-80px", left: 0, right: 0,
         }}
       />
-      <div className="absolute inset-0" style={{ background: "rgba(8,8,8,0.88)" }} />
+      <div className="absolute inset-0" style={{ background: "rgba(18,18,18,0.88)" }} />
 
       <div className="relative z-10 text-center max-w-[720px] px-6">
         <p ref={overlineRef} className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-6" style={{ opacity: 0 }}>

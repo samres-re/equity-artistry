@@ -6,7 +6,7 @@ const Footer = () => {
   };
 
   return (
-    <footer style={{ background: "#060606", borderTop: "1px solid rgba(201,168,76,0.1)" }} className="px-6 md:px-20 pt-12 pb-8">
+    <footer style={{ background: "#101010", borderTop: "1px solid rgba(201,168,76,0.1)" }} className="px-6 md:px-20 pt-12 pb-8">
       <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 mb-10">
         <div>
           <p className="font-display font-light text-gold text-[16px] tracking-[0.25em]">JWR FUNDING</p>

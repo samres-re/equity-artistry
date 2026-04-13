@@ -58,7 +58,7 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
   };
 
   return (
-    <section ref={ref} id="contact" className="py-[160px] px-6 md:px-20 noise-overlay" style={{ background: "#080808" }}>
+    <section ref={ref} id="contact" className="py-[160px] px-6 md:px-20 noise-overlay" style={{ background: "#121212" }}>
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20">
         <div ref={leftRef} style={{ opacity: 0 }}>
           <p className="font-body font-light text-[11px] tracking-[0.35em] text-gold mb-4">GET STARTED</p>

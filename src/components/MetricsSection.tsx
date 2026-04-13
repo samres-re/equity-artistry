@@ -74,7 +74,7 @@ const MetricsSection = forwardRef<HTMLDivElement>((_, ref) => {
       }}
       className="h-[180px] flex items-center"
       style={{
-        background: "#0a0a0a",
+        background: "#141414",
         borderTop: "1px solid rgba(201,168,76,0.1)",
         borderBottom: "1px solid rgba(201,168,76,0.1)",
       }}
