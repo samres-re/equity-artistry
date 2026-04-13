@@ -53,7 +53,7 @@ const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
         ref={bgRef}
         className="absolute bg-cover bg-center will-change-transform"
         style={{
-          backgroundImage: "url(https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80)",
+          backgroundImage: "url(https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=70)",
           top: "-80px", bottom: "-80px", left: 0, right: 0,
         }}
       />
