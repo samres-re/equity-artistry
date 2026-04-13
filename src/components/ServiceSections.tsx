@@ -142,7 +142,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
             key={i}
             id={`service-section-${i + 1}`}
             ref={sectionRefs[i]}
-            className="relative min-h-screen flex items-center overflow-hidden"
+            className="relative min-h-screen flex items-end md:items-center overflow-hidden"
           >
             <div
               ref={(el) => { bgRefs.current[i] = el; }}
@@ -155,8 +155,8 @@ const ServiceSections = ({ sectionRefs }: Props) => {
             <div className="absolute inset-0 hidden md:block" style={{ background: gradient }} />
             <div className="absolute inset-0 md:hidden" style={{ background: mobileGradient }} />
 
-            <div className={`relative z-10 w-full flex justify-start md:${isOdd ? "justify-start" : "justify-end"}`}>
-              <div className="px-6 md:px-20 py-20 max-w-[560px]">
+            <div className={`relative z-10 w-full flex justify-start ${isOdd ? "md:justify-start" : "md:justify-end"}`}>
+              <div className="px-6 md:px-20 py-12 md:py-20 pb-16 md:pb-20 max-w-[560px]">
                 {/* Vertical gold line — OVA signature section marker */}
                 <div
                   ref={(el) => { lineRefs.current[i] = el; }}
