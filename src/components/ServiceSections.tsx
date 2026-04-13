@@ -172,7 +172,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
 
                 <h2
                   ref={(el) => { headlineRefs.current[i] = el; }}
-                  className="font-display font-light text-jwr-text leading-[1.1] mt-4"
+                  className="font-display font-light text-[72px] text-jwr-text leading-[1.1] mt-4"
                   style={{ perspective: "1000px" }}
                 >
                   {headlineWords.map((word, wi) => (

@@ -106,7 +106,7 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
         <h1
           ref={headlineRef}
           className="font-display font-light text-jwr-text leading-[1.05]"
-          style={{ fontSize: "clamp(52px, 7vw, 96px)", opacity: 0 }}
+          style={{ fontSize: "clamp(60px, 8vw, 112px)", opacity: 0 }}
         >
           Capital solutions for
           <br />
