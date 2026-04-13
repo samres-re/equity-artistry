@@ -81,3 +81,12 @@
 .animate-scroll-line {
   animation: scroll-line 2s ease-in-out infinite;
 }
+
+@keyframes line-grow {
+  from { transform: scaleY(0); transform-origin: top; }
+  to { transform: scaleY(1); transform-origin: top; }
+}
+
+.animate-line-grow {
+  animation: line-grow 1.2s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}

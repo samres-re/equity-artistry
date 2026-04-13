@@ -25,32 +25,47 @@ const ServiceSections = ({ sectionRefs }: Props) => {
   const dividerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const ctaRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const headlineRefs = useRef<(HTMLHeadingElement | null)[]>([]);
+  const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      services.forEach((_, i) => {
+      services.forEach((s, i) => {
         const sectionEl = sectionRefs[i]?.current;
         const bgEl = bgRefs.current[i];
         const divider = dividerRefs.current[i];
         const num = numberRefs.current[i];
         const cta = ctaRefs.current[i];
+        const headline = headlineRefs.current[i];
+        const line = lineRefs.current[i];
 
         if (!sectionEl) return;
 
-        // Parallax + scale on background (OVA style)
+        // Parallax + scale on background — scrub 2.5, y -120, scale 1.15
         if (bgEl) {
           gsap.fromTo(bgEl,
-            { scale: 1.1 },
+            { scale: 1.15 },
             {
               scale: 1,
-              y: -80,
+              y: -120,
               ease: "none",
               scrollTrigger: {
                 trigger: sectionEl,
                 start: "top bottom",
                 end: "bottom top",
-                scrub: 1.5,
+                scrub: 2.5,
               },
+            }
+          );
+        }
+
+        // Vertical gold line — animate-line-grow on scroll entry
+        if (line) {
+          gsap.fromTo(line,
+            { scaleY: 0, transformOrigin: "top" },
+            {
+              scaleY: 1, duration: 1.2, ease: "cubic-bezier(0.76, 0, 0.24, 1)",
+              scrollTrigger: { trigger: sectionEl, start: "top 65%", once: true },
             }
           );
         }
@@ -64,6 +79,22 @@ const ServiceSections = ({ sectionRefs }: Props) => {
               scrollTrigger: { trigger: sectionEl, start: "top 60%", once: true },
             }
           );
+        }
+
+        // OVA word-by-word headline entrance with perspective + rotateX
+        if (headline) {
+          const words = headline.querySelectorAll<HTMLElement>(".word-span");
+          if (words.length > 0) {
+            gsap.fromTo(words,
+              { opacity: 0, y: 80, rotateX: -40 },
+              {
+                opacity: 1, y: 0, rotateX: 0,
+                duration: 1.4, ease: "power4.out",
+                stagger: 0.06,
+                scrollTrigger: { trigger: sectionEl, start: "top 65%", once: true },
+              }
+            );
+          }
         }
 
         // Gold divider width animation
@@ -102,6 +133,9 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           ? "linear-gradient(to right, rgba(8,8,8,0.97) 45%, rgba(8,8,8,0.4) 100%)"
           : "linear-gradient(to left, rgba(8,8,8,0.97) 45%, rgba(8,8,8,0.4) 100%)";
 
+        // Split headline into words for OVA-style animation
+        const headlineWords = s.name.split(/\s+/);
+
         return (
           <section
             key={i}
@@ -114,13 +148,20 @@ const ServiceSections = ({ sectionRefs }: Props) => {
               className="absolute bg-cover bg-center will-change-transform"
               style={{
                 backgroundImage: `url(${s.img})`,
-                top: "-80px", bottom: "-80px", left: 0, right: 0,
+                top: "-120px", bottom: "-120px", left: 0, right: 0,
               }}
             />
             <div className="absolute inset-0" style={{ background: gradient }} />
 
             <div className={`relative z-10 w-full flex ${isOdd ? "justify-start" : "justify-end"}`}>
               <div className="px-8 md:px-20 py-20 max-w-[560px]">
+                {/* Vertical gold line — OVA signature section marker */}
+                <div
+                  ref={(el) => { lineRefs.current[i] = el; }}
+                  className="w-[2px] h-[60px] bg-gold mb-4"
+                  style={{ transform: "scaleY(0)", transformOrigin: "top" }}
+                />
+
                 <p
                   ref={(el) => { numberRefs.current[i] = el; }}
                   className="font-display font-light text-[13px] tracking-[0.3em] text-gold"
@@ -129,15 +170,26 @@ const ServiceSections = ({ sectionRefs }: Props) => {
                   {num}
                 </p>
 
-                <SplitText
-                  as="h2"
+                <h2
+                  ref={(el) => { headlineRefs.current[i] = el; }}
                   className="font-display font-light text-jwr-text leading-[1.1] mt-4"
-                  scrub={1.5}
-                  triggerStart="top 70%"
-                  triggerEnd="top 40%"
+                  style={{ perspective: "1000px" }}
                 >
-                  {s.name}
-                </SplitText>
+                  {headlineWords.map((word, wi) => (
+                    <span
+                      key={wi}
+                      className="word-span"
+                      style={{
+                        display: "inline-block",
+                        willChange: "transform, opacity",
+                        opacity: 0,
+                        marginRight: "0.3em",
+                      }}
+                    >
+                      {word}
+                    </span>
+                  ))}
+                </h2>
 
                 <div
                   ref={(el) => { dividerRefs.current[i] = el; }}

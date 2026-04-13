@@ -43,9 +43,9 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
           { clipPath: "inset(100% 0% 0% 0%)", opacity: 1 },
           {
             clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1.2,
-            ease: "power4.inOut",
-            delay: i * 0.08,
+            duration: 1.6,
+            ease: "expo.inOut",
+            delay: i * 0.12,
             scrollTrigger: { trigger: card, start: "top 90%", once: true },
           }
         );
@@ -53,12 +53,12 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
         // Image scale-in
         if (img) {
           gsap.fromTo(img,
-            { scale: 1.3 },
+            { scale: 1.4 },
             {
               scale: 1,
               duration: 1.6,
               ease: "power3.out",
-              delay: i * 0.08,
+              delay: i * 0.12,
               scrollTrigger: { trigger: card, start: "top 90%", once: true },
             }
           );
