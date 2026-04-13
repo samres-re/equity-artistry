@@ -45,7 +45,7 @@ const ServiceSections = ({ sectionRefs }: Props) => {
         const bgEl = bgRefs.current[i];
         const divider = dividerRefs.current[i];
         const num = numberRefs.current[i];
-        const cta = ctaRefs.current[i];
+        
         const headline = headlineRefs.current[i];
         const line = lineRefs.current[i];
 
@@ -114,15 +114,6 @@ const ServiceSections = ({ sectionRefs }: Props) => {
           );
         }
 
-        if (cta) {
-          gsap.fromTo(cta,
-            { opacity: 0, y: 20 },
-            {
-              opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
-              scrollTrigger: { trigger: sectionEl, start: "top 45%", once: true },
-            }
-          );
-        }
       });
     });
 
