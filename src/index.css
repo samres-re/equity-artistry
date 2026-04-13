@@ -90,3 +90,11 @@
 .animate-line-grow {
   animation: line-grow 1.2s cubic-bezier(0.76, 0, 0.24, 1) forwards;
 }
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
