@@ -85,17 +85,29 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
 
     for (let i = 0; i < cards.length; i++) {
       const offset = i - centerIndex; // negative = left, positive = right
+      const absOffset = Math.abs(offset);
       const clampedOffset = Math.max(-3, Math.min(3, offset));
       const rotateY = (clampedOffset / 3) * MAX_ROTATE_Y;
       const translateZ = TRANSLATE_Z_FALLOFF * Math.abs(clampedOffset / 3);
       const translateX = offset * (CARD_W + CARD_GAP);
-      const opacity = Math.abs(offset) > 3.5 ? 0 : 1;
+      const opacity = absOffset > 3.5 ? 0 : 1;
       const scale = 1 - Math.abs(clampedOffset) * 0.04;
+
+      // Glow intensity peaks at center (offset=0), fades by offset=1.2
+      const glowIntensity = Math.max(0, 1 - absOffset / 1.2);
+      const goldGlow = `0 0 ${30 * glowIntensity}px rgba(183,150,90,${0.35 * glowIntensity}), 0 40px 80px rgba(0,0,0,0.6)`;
+      const borderOpacity = 0.4 * glowIntensity;
 
       const card = cards[i] as HTMLElement;
       card.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
       card.style.opacity = String(opacity);
-      card.style.zIndex = String(100 - Math.round(Math.abs(offset) * 10));
+      card.style.zIndex = String(100 - Math.round(absOffset * 10));
+      card.style.boxShadow = goldGlow;
+      // Update border overlay
+      const borderEl = card.querySelector('.card-border-overlay') as HTMLElement;
+      if (borderEl) {
+        borderEl.style.borderColor = `rgba(183,150,90,${borderOpacity})`;
+      }
     }
   };
 
@@ -197,7 +209,7 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
                     className="absolute inset-0"
                     style={{ background: "linear-gradient(to top, rgba(8,8,8,0.95) 35%, rgba(8,8,8,0.15) 100%)" }}
                   />
-                  <div className="absolute inset-0 border border-transparent group-hover:border-gold/40 transition-colors duration-300" style={{ borderRadius: 4 }} />
+                  <div className="card-border-overlay absolute inset-0 border border-transparent transition-colors duration-500" style={{ borderRadius: 4 }} />
                   <div className="absolute bottom-5 left-5 right-5">
                     <p className="font-body font-light text-[10px] tracking-[0.2em] text-gold mb-1">{s.tag}</p>
                     <h3 className="font-display font-normal text-[20px] text-jwr-text leading-tight">{s.name}</h3>
