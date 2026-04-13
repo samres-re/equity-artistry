@@ -94,7 +94,7 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <section ref={ref} className="relative h-screen flex items-center justify-center noise-overlay" style={{ background: "#121212" }}>
-      <div className="absolute top-24 left-6 md:left-12 font-body font-light text-[11px] tracking-[0.2em] text-jwr-dim">
+      <div className="absolute top-24 left-6 md:left-12 font-body font-light text-[11px] tracking-[0.2em] text-jwr-dim hidden md:block">
         EST. 2000
       </div>
 
@@ -106,7 +106,7 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
         <h1
           ref={headlineRef}
           className="font-display font-light text-jwr-text leading-[1.05]"
-          style={{ fontSize: "clamp(60px, 8vw, 112px)", opacity: 0 }}
+          style={{ fontSize: "clamp(40px, 8vw, 112px)", opacity: 0 }}
         >
           Capital solutions for
           <br />
@@ -127,16 +127,16 @@ const HeroSection = forwardRef<HTMLDivElement>((_, ref) => {
           Arranging debt and equity up to $10B+ across real estate, construction, and business capital since 1999.
         </p>
 
-        <div ref={ctaRef} className="flex items-center justify-center gap-4 mt-10" style={{ opacity: 0 }}>
+        <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10" style={{ opacity: 0 }}>
           <button
             onClick={() => scrollTo("#contact")}
-            className="font-display font-normal text-[15px] tracking-[0.12em] bg-gold text-jwr-bg px-8 py-3.5 hover:bg-gold-light transition-colors duration-300"
+            className="font-display font-normal text-[14px] sm:text-[15px] tracking-[0.12em] bg-gold text-jwr-bg px-8 py-3.5 hover:bg-gold-light transition-colors duration-300 w-full sm:w-auto"
           >
             Apply for Financing
           </button>
           <button
             onClick={() => scrollTo("#services")}
-            className="font-display font-normal text-[15px] tracking-[0.12em] text-jwr-muted border border-jwr-dim px-8 py-3.5 hover:border-gold hover:text-jwr-text transition-all duration-300"
+            className="font-display font-normal text-[14px] sm:text-[15px] tracking-[0.12em] text-jwr-muted border border-jwr-dim px-8 py-3.5 hover:border-gold hover:text-jwr-text transition-all duration-300 w-full sm:w-auto"
           >
             Explore Services
           </button>

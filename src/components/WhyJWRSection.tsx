@@ -58,10 +58,10 @@ const WhyJWRSection = forwardRef<HTMLDivElement>((_, ref) => {
   }, []);
 
   return (
-    <section ref={ref} id="why-jwr" className="py-[160px] px-6 md:px-20" style={{ background: "#141414" }}>
+    <section ref={ref} id="why-jwr" className="py-[80px] md:py-[160px] px-6 md:px-20" style={{ background: "#141414" }}>
       <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-16">
         <div className="md:col-span-2">
-          <blockquote ref={quoteRef} className="font-display italic font-light text-[68px] text-jwr-text leading-[1.2]" style={{ opacity: 0 }}>
+          <blockquote ref={quoteRef} className="font-display italic font-light text-[36px] md:text-[68px] text-jwr-text leading-[1.2]" style={{ opacity: 0 }}>
             "Fast decisions. Creative structures. Access to capital that most lenders won't touch."
           </blockquote>
           <p ref={attrRef} className="font-body font-light text-[12px] tracking-[0.2em] text-jwr-muted mt-6" style={{ opacity: 0 }}>— JWR FUNDING</p>
