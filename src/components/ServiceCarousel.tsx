@@ -218,6 +218,9 @@ const ServiceCarousel = forwardRef<HTMLDivElement>((_, ref) => {
               );
             })}
           </div>
+          {/* Edge vignettes */}
+          <div className="absolute left-0 top-0 bottom-0 w-[200px] pointer-events-none z-10" style={{ background: "linear-gradient(to right, #121212 0%, transparent 100%)" }} />
+          <div className="absolute right-0 top-0 bottom-0 w-[200px] pointer-events-none z-10" style={{ background: "linear-gradient(to left, #121212 0%, transparent 100%)" }} />
         </div>
       </div>
     </section>
