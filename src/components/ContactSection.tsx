@@ -2,6 +2,8 @@ import { forwardRef, useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitText from "./SplitText";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,12 +23,12 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
   const [form, setForm] = useState({
     name: "", company: "", phone: "", email: "", type: "", amount: "", description: "",
   });
+  const [submitting, setSubmitting] = useState(false);
   const leftRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Left column entrance
       if (leftRef.current) {
         gsap.fromTo(leftRef.current,
           { opacity: 0, x: -40 },
@@ -37,7 +39,6 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
         );
       }
 
-      // Form fields stagger (clip-path reveal)
       if (formRef.current) {
         const fields = formRef.current.children;
         gsap.fromTo(
@@ -58,6 +59,60 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!form.name.trim() || !form.email.trim()) {
+      toast.error("Please fill in your name and email.");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const id = crypto.randomUUID();
+
+      const { error } = await supabase.from("contact_submissions").insert({
+        id,
+        name: form.name.trim(),
+        company: form.company.trim() || null,
+        phone: form.phone.trim() || null,
+        email: form.email.trim(),
+        financing_type: form.type || null,
+        amount: form.amount.trim() || null,
+        description: form.description.trim() || null,
+      });
+
+      if (error) throw error;
+
+      // Send notification email to Jeff
+      await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "new-lead-notification",
+          recipientEmail: "jwinick31@gmail.com",
+          idempotencyKey: `lead-notify-${id}`,
+          templateData: {
+            name: form.name.trim(),
+            company: form.company.trim(),
+            phone: form.phone.trim(),
+            email: form.email.trim(),
+            financingType: form.type,
+            amount: form.amount.trim(),
+            description: form.description.trim(),
+          },
+        },
+      });
+
+      toast.success("Your inquiry has been submitted. We'll be in touch shortly.");
+      setForm({ name: "", company: "", phone: "", email: "", type: "", amount: "", description: "" });
+    } catch (err) {
+      console.error("Submission error:", err);
+      toast.error("Something went wrong. Please try again or call us directly.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <section ref={ref} id="contact" className="py-[80px] md:py-[160px] px-6 md:px-20 noise-overlay" style={{ background: "#121212" }}>
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20">
@@ -73,11 +128,11 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
           <p className="font-body font-light text-[14px] text-jwr-muted mt-2">jwinick31@gmail.com</p>
         </div>
 
-        <form ref={formRef} className="flex flex-col gap-2" onSubmit={(e) => e.preventDefault()}>
-          <input name="name" placeholder="Full Name" className={inputClass} value={form.name} onChange={handleChange} style={{ opacity: 0 }} />
+        <form ref={formRef} className="flex flex-col gap-2" onSubmit={handleSubmit}>
+          <input name="name" placeholder="Full Name" className={inputClass} value={form.name} onChange={handleChange} style={{ opacity: 0 }} required />
           <input name="company" placeholder="Company Name" className={inputClass} value={form.company} onChange={handleChange} style={{ opacity: 0 }} />
           <input name="phone" placeholder="Phone Number" className={inputClass} value={form.phone} onChange={handleChange} style={{ opacity: 0 }} />
-          <input name="email" placeholder="Email Address" type="email" className={inputClass} value={form.email} onChange={handleChange} style={{ opacity: 0 }} />
+          <input name="email" placeholder="Email Address" type="email" className={inputClass} value={form.email} onChange={handleChange} style={{ opacity: 0 }} required />
           <select
             name="type"
             className={`${inputClass} appearance-none cursor-pointer`}
@@ -102,10 +157,11 @@ const ContactSection = forwardRef<HTMLDivElement>((_, ref) => {
           />
           <button
             type="submit"
-            className="w-full bg-gold text-jwr-bg font-display font-normal text-[18px] tracking-[0.15em] py-[18px] mt-6 hover:bg-gold-light transition-colors duration-300"
+            disabled={submitting}
+            className="w-full bg-gold text-jwr-bg font-display font-normal text-[18px] tracking-[0.15em] py-[18px] mt-6 hover:bg-gold-light transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ opacity: 0 }}
           >
-            Submit
+            {submitting ? "Submitting..." : "Submit"}
           </button>
         </form>
       </div>
