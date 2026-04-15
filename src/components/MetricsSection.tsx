@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 const metrics = [
   { value: 10, prefix: "$", suffix: "B+", label: "Capital Arranged" },
   { value: 500, prefix: "", suffix: "+", label: "Deals Funded" },
-  { value: 25, prefix: "", suffix: " Years", label: "In Business" },
+  { value: 40, prefix: "", suffix: " Years", label: "In Business" },
 ];
 
 function CountUp({ target, prefix, suffix, triggered }: { target: number; prefix: string; suffix: string; triggered: boolean }) {
