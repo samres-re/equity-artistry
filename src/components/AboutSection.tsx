@@ -86,7 +86,7 @@ const AboutSection = forwardRef<HTMLDivElement>((_, ref) => {
           triggerStart="top 70%"
           triggerEnd="top 25%"
         >
-          JWR Funding is a private capital advisory firm with 25 years of experience arranging debt and equity across real estate, construction, and business acquisition. We operate where conventional lenders stop — structuring solutions for complex, time-sensitive, and oversized capital needs.
+          JWR Funding is a private capital advisory firm with over 25 years of experience arranging debt and equity across real estate, construction, and business acquisition. We operate where conventional lenders stop — structuring solutions for complex, time-sensitive, and oversized capital needs.
         </SplitText>
       </div>
     </section>
